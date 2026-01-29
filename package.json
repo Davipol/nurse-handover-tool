@@ -3,7 +3,13 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "setup-dbs": "psql -U postgres -h localhost -f ./db/db_setup.sql",
+    "seed": "node ./db/db_seed.js",
+    "setup-and-seed": "npm run setup-dbs && psql -U postgres -h localhost -d handover_tool_db -f ./db/schema.sql && npm run seed",
+    "setup-test": "npm run setup-dbs && psql -U postgres -h localhost -d handover_tool_db_test -f ./db/schema.sql",
+    "test": "jest",
+    "start": "node app.js",
+    "dev": "nodemon listen.js"
   },
   "keywords": [],
   "author": "",
