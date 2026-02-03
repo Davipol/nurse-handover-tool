@@ -30,24 +30,28 @@ const fetchHandoverNotesByFilters = async (urgency, date) => {
   return rows;
 };
 
-const fetchHandoverByPatient = async (patient_id) => {
+const fetchHandoversByBed = async (bed) => {
   const patientResult = await db.query(
-    "SELECT id, first_name, last_name, bed, status, unit_id FROM patients WHERE id = $1",
-    [patient_id],
+    "SELECT id, first_name, last_name, bed, status, unit_id FROM patients WHERE bed = $1",
+    [bed],
   );
+
+  const patient = patientResult.rows[0];
+
+  if (!patient) return { patient: null, handovers: [] };
 
   const handoversResult = await db.query(
     "SELECT * FROM handover_notes WHERE patient_id = $1 ORDER BY handover_date DESC, created_at DESC",
-    [patient_id],
+    [patient.id],
   );
 
   return {
-    patient: patientResult.rows[0] || null,
+    patient,
     handovers: handoversResult.rows,
   };
 };
 module.exports = {
   fetchHandoverNotes,
   fetchHandoverNotesByFilters,
-  fetchHandoverByPatient,
+  fetchHandoversByBed,
 };

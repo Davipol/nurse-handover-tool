@@ -13,6 +13,6 @@ const patientsRouter = require("./routes/patients.routes");
 app.use("/api/patients", patientsRouter);
 
 const handoverRouter = require("./routes/handovers.routes");
-app.use("/api/handover_notes", handoverRouter);
+app.use("/api/handovers", handoverRouter);
 
 module.exports = app;

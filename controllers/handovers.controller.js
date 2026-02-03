@@ -1,7 +1,7 @@
 const {
   fetchHandoverNotes,
   fetchHandoverNotesByFilters,
-  fetchHandoverByPatient,
+  fetchHandoversByBed,
 } = require("../models/handovers.model");
 
 const getHandoverNotes = async (req, res, next) => {
@@ -21,13 +21,13 @@ const getHandoverNotes = async (req, res, next) => {
   }
 };
 
-const getHandoverNotesByPatient = async (req, res, next) => {
+const getHandoversByBed = async (req, res, next) => {
   try {
-    const { patient_id } = req.params;
-    const { patient, handovers } = await fetchHandoverByPatient(patient_id);
+    const { bed } = req.params;
+    const { patient, handovers } = await fetchHandoversByBed(bed);
 
     if (!patient) {
-      return res.status(404).send({ msg: "Patient not found" });
+      return res.status(404).send({ msg: "No patient found in this bed" });
     }
     res.status(200).send({
       patient,
@@ -38,4 +38,4 @@ const getHandoverNotesByPatient = async (req, res, next) => {
     next(err);
   }
 };
-module.exports = { getHandoverNotes, getHandoverNotesByPatient };
+module.exports = { getHandoverNotes, getHandoversByBed };

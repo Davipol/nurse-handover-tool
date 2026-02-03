@@ -38,12 +38,12 @@ const seed = async () => {
     // Insert Patients
     const patientsResult = await db.query(`
       INSERT INTO patients (first_name, last_name, date_of_birth, bed, conditions, status, unit_id) VALUES 
-      ('John', 'Smith', '1965-03-15', 'C-101', '["Hypertension", "Type 2 Diabetes", "Coronary Artery Disease"]', 'admitted', 1),
-      ('Mary', 'Williams', '1978-07-22', 'E-205', '["Acute Chest Pain"]', 'admitted', 2),
-      ('Robert', 'Brown', '1955-11-30', 'I-302', '["Sepsis", "Respiratory Failure"]', 'admitted', 3),
-      ('Jennifer', 'Davis', '1990-05-10', 'G-104', '["Post-operative Appendectomy"]', 'admitted', 4),
-      ('William', 'Martinez', '1982-09-18', 'C-103', '["Myocardial Infarction"]', 'discharged', 1),
-      ('Linda', 'Garcia', '2010-12-25', 'P-201', '["Pneumonia", "Asthma"]', 'admitted', 5)
+('John', 'Smith', '1965-03-15', 'C-1', '["Hypertension", "Type 2 Diabetes", "Coronary Artery Disease"]', 'admitted', 1),
+('Mary', 'Williams', '1978-07-22', 'E-1', '["Acute Chest Pain"]', 'admitted', 2),
+('Robert', 'Brown', '1955-11-30', 'I-1', '["Sepsis", "Respiratory Failure"]', 'admitted', 3),
+('Jennifer', 'Davis', '1990-05-10', 'G-1', '["Post-operative Appendectomy"]', 'admitted', 4),
+('William', 'Martinez', '1982-09-18', 'C-2', '["Myocardial Infarction"]', 'discharged', 1),
+('Linda', 'Garcia', '2010-12-25', 'P-1', '["Pneumonia", "Asthma"]', 'admitted', 5)
       RETURNING id
     `);
     console.log("Inserted 6 patients");
