@@ -54,8 +54,26 @@ const fetchHandoversByBed = async (bed) => {
     handovers: handoversResult.rows,
   };
 };
+
+const createHandover = async (handoverData) => {
+  const {
+    nurse_id,
+    patient_id,
+    handover_date,
+    shift,
+    urgency,
+    vitals,
+    content,
+  } = handoverData;
+  const { rows } = await db.query(
+    "INSERT INTO handover_notes(nurse_id, patient_id, handover_date, shift, urgency, vitals, content) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *",
+    [nurse_id, patient_id, handover_date, shift, urgency, vitals, content],
+  );
+  return rows[0];
+};
 module.exports = {
   fetchHandoverNotes,
   fetchHandoverNotesByFilters,
   fetchHandoversByBed,
+  createHandover,
 };

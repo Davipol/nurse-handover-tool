@@ -2,6 +2,7 @@ const {
   fetchHandoverNotes,
   fetchHandoverNotesByFilters,
   fetchHandoversByBed,
+  createHandover,
 } = require("../models/handovers.model");
 
 const getHandoverNotes = async (req, res, next) => {
@@ -38,4 +39,26 @@ const getHandoversByBed = async (req, res, next) => {
     next(err);
   }
 };
-module.exports = { getHandoverNotes, getHandoversByBed };
+
+const postHandover = async (req, res, next) => {
+  try {
+    const {
+      nurse_id,
+      patient_id,
+      handover_date,
+      shift,
+      urgency,
+      vitals,
+      content,
+    } = req.body;
+
+    if (!nurse_id || !patient_id || !handover_date || !shift || !content) {
+      return res.status(400).send({ msg: "Missing required fields" });
+    }
+    const newHandover = await createHandover(req.body);
+    res.status(201).send({ handover_note: newHandover });
+  } catch (err) {
+    next(err);
+  }
+};
+module.exports = { getHandoverNotes, getHandoversByBed, postHandover };
