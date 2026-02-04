@@ -1,0 +1,279 @@
+{
+  "units": [
+    {
+      "id": 1,
+      "name": "Cardiology"
+    },
+    {
+      "id": 2,
+      "name": "Emergency Department"
+    },
+    {
+      "id": 3,
+      "name": "Intensive Care Unit"
+    },
+    {
+      "id": 4,
+      "name": "Respiratory"
+    },
+    {
+      "id": 5,
+      "name": "Pediatrics"
+    },
+    {
+      "id": 6,
+      "name": "Orthopedics"
+    }
+  ],
+  "nurses": [
+    {
+      "id": 1,
+      "name": "Sarah Johnson",
+      "email": "sarah.johnson@hospital.com",
+      "unit_id": 1,
+      "unit_name": "Cardiology"
+    },
+    {
+      "id": 2,
+      "name": "Michael Chen",
+      "email": "michael.chen@hospital.com",
+      "unit_id": 2,
+      "unit_name": "Emergency Department"
+    },
+    {
+      "id": 3,
+      "name": "Emily Rodriguez",
+      "email": "emily.rodriguez@hospital.com",
+      "unit_id": 3,
+      "unit_name": "Intensive Care Unit"
+    },
+    {
+      "id": 4,
+      "name": "David Kim",
+      "email": "david.kim@hospital.com",
+      "unit_id": 1,
+      "unit_name": "Cardiology"
+    },
+    {
+      "id": 5,
+      "name": "Jessica Williams",
+      "email": "jessica.williams@hospital.com",
+      "unit_id": 4,
+      "unit_name": "Respiratory"
+    },
+    {
+      "id": 6,
+      "name": "Ahmed Hassan",
+      "email": "ahmed.hassan@hospital.com",
+      "unit_id": 5,
+      "unit_name": "Pediatrics"
+    }
+  ],
+  "patients": [
+    {
+      "id": 1,
+      "first_name": "John",
+      "last_name": "Smith",
+      "date_of_birth": "1965-03-15",
+      "bed": "C-1",
+      "conditions": [
+        "Hypertension",
+        "Type 2 Diabetes",
+        "Coronary Artery Disease"
+      ],
+      "status": "admitted",
+      "unit_id": 1,
+      "unit_name": "Cardiology"
+    },
+    {
+      "id": 2,
+      "first_name": "Mary",
+      "last_name": "Williams",
+      "date_of_birth": "1978-07-22",
+      "bed": "E-1",
+      "conditions": ["Acute Chest Pain"],
+      "status": "admitted",
+      "unit_id": 2,
+      "unit_name": "Emergency Department"
+    },
+    {
+      "id": 3,
+      "first_name": "Robert",
+      "last_name": "Brown",
+      "date_of_birth": "1955-11-30",
+      "bed": "I-1",
+      "conditions": ["Sepsis", "Respiratory Failure"],
+      "status": "admitted",
+      "unit_id": 3,
+      "unit_name": "Intensive Care Unit"
+    },
+    {
+      "id": 4,
+      "first_name": "Jennifer",
+      "last_name": "Davis",
+      "date_of_birth": "1990-05-10",
+      "bed": "G-1",
+      "conditions": ["Post-operative Appendectomy"],
+      "status": "admitted",
+      "unit_id": 4,
+      "unit_name": "Respiratory"
+    },
+    {
+      "id": 5,
+      "first_name": "William",
+      "last_name": "Martinez",
+      "date_of_birth": "1982-09-18",
+      "bed": "C-2",
+      "conditions": ["Myocardial Infarction"],
+      "status": "discharged",
+      "unit_id": 1,
+      "unit_name": "Cardiology"
+    },
+    {
+      "id": 6,
+      "first_name": "Linda",
+      "last_name": "Garcia",
+      "date_of_birth": "2010-12-25",
+      "bed": "P-1",
+      "conditions": ["Pneumonia", "Asthma"],
+      "status": "admitted",
+      "unit_id": 5,
+      "unit_name": "Pediatrics"
+    }
+  ],
+  "handover_notes": [
+    {
+      "id": 1,
+      "nurse_id": 1,
+      "nurse_name": "Sarah Johnson",
+      "patient_id": 1,
+      "patient_name": "John Smith",
+      "bed": "C-1",
+      "handover_date": "2026-01-29",
+      "shift": "day",
+      "urgency": "routine",
+      "vitals": {
+        "bloodPressure": "132/84",
+        "pulse": 76,
+        "temperature": 36.9,
+        "respiratoryRate": 16,
+        "oxygenSaturation": 97
+      },
+      "content": "Patient stable overnight. Blood glucose levels well controlled at 6.2 mmol/L. Continue current medication regimen. Patient ambulating well. No complaints of chest pain."
+    },
+    {
+      "id": 2,
+      "nurse_id": 1,
+      "nurse_name": "Sarah Johnson",
+      "patient_id": 1,
+      "patient_name": "John Smith",
+      "bed": "C-1",
+      "handover_date": "2026-01-28",
+      "shift": "night",
+      "urgency": "urgent",
+      "vitals": {
+        "bloodPressure": "158/95",
+        "pulse": 92,
+        "temperature": 37.2,
+        "respiratoryRate": 18,
+        "oxygenSaturation": 95
+      },
+      "content": "BP elevated at 2300hrs. Dr. Patterson notified. Additional 5mg amlodipine given as per protocol. Patient reports mild dizziness. Monitor BP q2h overnight. Recheck in AM."
+    },
+    {
+      "id": 3,
+      "nurse_id": 2,
+      "nurse_name": "Michael Chen",
+      "patient_id": 2,
+      "patient_name": "Mary Williams",
+      "bed": "E-1",
+      "handover_date": "2026-01-29",
+      "shift": "day",
+      "urgency": "critical",
+      "vitals": {
+        "bloodPressure": "95/62",
+        "pulse": 118,
+        "temperature": 38.1,
+        "respiratoryRate": 24,
+        "oxygenSaturation": 92
+      },
+      "content": "Patient admitted at 0300hrs with acute chest pain. Cardiology consult requested - Dr. Lee attending. ECG shows ST elevation. Preparing for emergency cath lab. Patient anxious. Family notified and present."
+    },
+    {
+      "id": 4,
+      "nurse_id": 3,
+      "nurse_name": "Emily Rodriguez",
+      "patient_id": 3,
+      "patient_name": "Robert Brown",
+      "bed": "I-1",
+      "handover_date": "2026-01-28",
+      "shift": "night",
+      "urgency": "critical",
+      "vitals": {
+        "bloodPressure": "88/55",
+        "pulse": 125,
+        "temperature": 39.2,
+        "respiratoryRate": 28,
+        "oxygenSaturation": 88
+      },
+      "content": "Septic patient requiring close monitoring. On vasopressor support (norepinephrine 0.15 mcg/kg/min). Increasing O2 requirements - now on 60% FiO2. Blood cultures drawn. Awaiting ICU consultant review. Family meeting scheduled for 0800hrs."
+    },
+    {
+      "id": 5,
+      "nurse_id": 5,
+      "nurse_name": "Jessica Williams",
+      "patient_id": 4,
+      "patient_name": "Jennifer Davis",
+      "bed": "G-1",
+      "handover_date": "2026-01-29",
+      "shift": "day",
+      "urgency": "routine",
+      "vitals": {
+        "bloodPressure": "118/72",
+        "pulse": 68,
+        "temperature": 36.8,
+        "respiratoryRate": 14,
+        "oxygenSaturation": 99
+      },
+      "content": "Post-op day 2. Wound site clean, dry, intact. Patient tolerating regular diet. Pain well controlled with oral analgesia (3/10). Ambulating in hallway with assistance. Plan for discharge tomorrow if continues to progress well."
+    },
+    {
+      "id": 6,
+      "nurse_id": 6,
+      "nurse_name": "Ahmed Hassan",
+      "patient_id": 6,
+      "patient_name": "Linda Garcia",
+      "bed": "P-1",
+      "handover_date": "2026-01-28",
+      "shift": "night",
+      "urgency": "urgent",
+      "vitals": {
+        "bloodPressure": "105/68",
+        "pulse": 115,
+        "temperature": 38.8,
+        "respiratoryRate": 32,
+        "oxygenSaturation": 91
+      },
+      "content": "Pediatric patient with worsening respiratory status. Increased work of breathing noted. Nebulizer treatments given q4h. CXR shows bilateral infiltrates. Pediatric team aware. Mother at bedside, very anxious. Providing reassurance and updates."
+    }
+  ],
+  "summary": {
+    "total_units": 6,
+    "total_nurses": 6,
+    "total_patients": 6,
+    "total_handovers": 6,
+    "patients_by_status": {
+      "admitted": 5,
+      "discharged": 1
+    },
+    "handovers_by_urgency": {
+      "routine": 2,
+      "urgent": 2,
+      "critical": 2
+    },
+    "handovers_by_shift": {
+      "day": 3,
+      "night": 3
+    }
+  }
+}
