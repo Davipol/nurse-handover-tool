@@ -26,4 +26,11 @@ const fetchPatientsByFilters = async (unit, bed) => {
   const { rows } = await db.query(query, params);
   return rows;
 };
-module.exports = { fetchPatients, fetchPatientsByFilters };
+
+const fetchPatientbyBed = async (bed) => {
+  const { rows } = await db.query("SELECT * FROM patients WHERE bed = $1", [
+    bed,
+  ]);
+  return rows[0] || null;
+};
+module.exports = { fetchPatients, fetchPatientsByFilters, fetchPatientbyBed };
