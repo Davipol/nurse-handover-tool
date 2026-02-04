@@ -5,7 +5,7 @@ const fetchHandoverNotes = async () => {
   return rows;
 };
 
-const fetchHandoverNotesByFilters = async (urgency, date) => {
+const fetchHandoverNotesByFilters = async (urgency, date, shift) => {
   let query = "SELECT * FROM handover_notes";
   const params = [];
   const conditions = [];
@@ -18,6 +18,10 @@ const fetchHandoverNotesByFilters = async (urgency, date) => {
   if (date) {
     conditions.push(`handover_date::date = $${params.length + 1}`);
     params.push(date);
+  }
+  if (shift) {
+    conditions.push(`shift = $${params.length + 1}`);
+    params.push(shift);
   }
 
   if (conditions.length > 0) {

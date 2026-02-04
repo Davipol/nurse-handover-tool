@@ -6,11 +6,11 @@ const {
 
 const getHandoverNotes = async (req, res, next) => {
   try {
-    const { urgency, date } = req.query;
+    const { urgency, date, shift } = req.query;
 
     let handover_notes;
-    if (urgency || date) {
-      handover_notes = await fetchHandoverNotesByFilters(urgency, date);
+    if (urgency || date || shift) {
+      handover_notes = await fetchHandoverNotesByFilters(urgency, date, shift);
     } else {
       handover_notes = await fetchHandoverNotes();
     }
