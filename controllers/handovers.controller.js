@@ -3,6 +3,7 @@ const {
   fetchHandoverNotesByFilters,
   fetchHandoversByBed,
   createHandover,
+  updateHandover,
 } = require("../models/handovers.model");
 
 const getHandoverNotes = async (req, res, next) => {
@@ -61,4 +62,31 @@ const postHandover = async (req, res, next) => {
     next(err);
   }
 };
-module.exports = { getHandoverNotes, getHandoversByBed, postHandover };
+const patchHandover = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const updates = req.body;
+
+    if (updates.nurse_id || updates.patient_id || updates.handover_date) {
+      return res.status(400).send({
+        msg: "Cannot update nurse_id, patient_id, or handover_date",
+      });
+    }
+
+    const updatedHandover = await updateHandover(id, updates);
+
+    if (!updatedHandover) {
+      return res.status(404).send({ msg: "Handover not found" });
+    }
+
+    res.status(200).send({ handover_note: updatedHandover });
+  } catch (err) {
+    next(err);
+  }
+};
+module.exports = {
+  getHandoverNotes,
+  getHandoversByBed,
+  postHandover,
+  patchHandover,
+};
