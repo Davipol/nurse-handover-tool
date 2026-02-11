@@ -15,4 +15,7 @@ app.use("/api/patients", patientsRouter);
 const handoverRouter = require("./routes/handovers.routes");
 app.use("/api/handovers", handoverRouter);
 
+const aiRouter = require("./routes/ai.routes");
+app.use("/api", aiRouter);
+
 module.exports = app;
