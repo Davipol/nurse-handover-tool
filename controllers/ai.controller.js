@@ -1,4 +1,8 @@
-const { summarizeHandovers } = require("../models/ai.model");
+const db = require("../db/connection");
+const {
+  summarizeHandovers,
+  summarizeSingleHandover,
+} = require("../models/ai.model");
 const { fetchHandoversByBed } = require("../models/handovers.model");
 
 const getPatientSummary = async (req, res, next) => {
@@ -18,7 +22,7 @@ const getPatientSummary = async (req, res, next) => {
         .send({ msg: "No handovers found for this patient" });
     }
 
-    // Generate AI summary
+    // Generate AI summary of multiple handovers for same patient
     const summary = await summarizeHandovers(handovers);
 
     res.status(200).send({
@@ -32,4 +36,27 @@ const getPatientSummary = async (req, res, next) => {
   }
 };
 
-module.exports = { getPatientSummary };
+// Generate AI summary of single handover
+const getSingleHandoverSummary = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const { rows } = await db.query(
+      "SELECT * FROM handover_notes WHERE id = $1",
+      [id],
+    );
+    const handover = rows[0];
+    if (!handover) {
+      return res.status(404).send({ msg: "Handover not found" });
+    }
+    const summary = await summarizeSingleHandover(handover);
+    res.status(200).send({
+      handover_note: handover,
+      ai_summary: summary,
+      disclaimer: "AI-generated summary - always verify with original note",
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+module.exports = { getPatientSummary, getSingleHandoverSummary };

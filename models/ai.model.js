@@ -32,4 +32,32 @@ Provide a concise, accurate SBAR summary.`;
   return response.message.content;
 };
 
-module.exports = { summarizeHandovers };
+const summarizeSingleHandover = async (handoverNote) => {
+  const prompt = `You are a medical summarization assistant. Summarize this handover note concisely using the SBAR method (Situation, Background, Assessment, Recommendation).
+
+CRITICAL RULES:
+- Only include information that is explicitly stated
+- Do NOT add specific numbers or details that aren't provided
+- Keep it brief and professional
+- Use proper grammar and past tense for completed events
+- Format headers as: "Situation:", "Background:", "Assessment:", "Recommendation:" (without any markdown formatting)
+- Be concise - 3-4 sentences total
+- Focus on key clinical points
+
+Handover note:
+Date: ${handoverNote.handover_date}
+Shift: ${handoverNote.shift}
+Urgency: ${handoverNote.urgency}
+Vitals: BP ${handoverNote.vitals.bloodPressure}, Pulse ${handoverNote.vitals.pulse}, Temp ${handoverNote.vitals.temperature}°C, RR ${handoverNote.vitals.respiratoryRate}, O2 Sat ${handoverNote.vitals.oxygenSaturation}%
+Content: ${handoverNote.content}
+
+Provide a concise SBAR summary (max 4-5 sentences).`;
+
+  const response = await ollama.chat({
+    model: "gemma3n:e2b",
+    messages: [{ role: "user", content: prompt }],
+  });
+  return response.message.content;
+};
+
+module.exports = { summarizeHandovers, summarizeSingleHandover };
