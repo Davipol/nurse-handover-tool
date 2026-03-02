@@ -60,4 +60,50 @@ Provide a concise SBAR summary (max 4-5 sentences).`;
   return response.message.content;
 };
 
-module.exports = { summarizeHandovers, summarizeSingleHandover };
+const summarizeUnitDay = async (unitName, handovers, date) => {
+  // Pre-organize by urgency in JavaScript (so AI can't mess it up)
+  const critical = handovers.filter((h) => h.urgency === "critical");
+  const urgent = handovers.filter((h) => h.urgency === "urgent");
+  const routine = handovers.filter((h) => h.urgency === "routine");
+
+  // Format each group
+  const formatGroup = (notes) => {
+    if (notes.length === 0) return "None";
+    return notes
+      .map(
+        (n) =>
+          `${n.patient_first_name} ${n.patient_last_name} (${n.bed}): ${n.content}`,
+      )
+      .join("\n\n");
+  };
+
+  const prompt = `You are a medical summarization assistant. Provide a brief summary for ${unitName} on ${date}. Keep each patient's summary to 1-2 sentences highlighting key clinical points.
+
+CRITICAL RULES:
+- Only include information explicitly stated
+- Do NOT add numbers or details not provided
+- Be concise and factual
+
+CRITICAL CASES:
+${formatGroup(critical)}
+
+URGENT CASES:
+${formatGroup(urgent)}
+
+ROUTINE CASES:
+${formatGroup(routine)}
+
+Summarize each category briefly, maintaining the same structure.`;
+
+  const response = await ollama.chat({
+    model: "gemma3n:e2b",
+    messages: [{ role: "user", content: prompt }],
+  });
+
+  return response.message.content;
+};
+module.exports = {
+  summarizeHandovers,
+  summarizeSingleHandover,
+  summarizeUnitDay,
+};
