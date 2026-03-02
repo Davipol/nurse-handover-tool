@@ -73,9 +73,56 @@ const seed = async () => {
       
       (6, 6, '2026-01-28', 'night', 'urgent',
        '{"bloodPressure": "105/68", "pulse": 115, "temperature": 38.8, "respiratoryRate": 32, "oxygenSaturation": 91}',
-       'Pediatric patient with worsening respiratory status. Increased work of breathing noted. Nebulizer treatments given q4h. CXR shows bilateral infiltrates. Pediatric team aware. Mother at bedside, very anxious. Providing reassurance and updates.')
+       'Pediatric patient with worsening respiratory status. Increased work of breathing noted. Nebulizer treatments given q4h. CXR shows bilateral infiltrates. Pediatric team aware. Mother at bedside, very anxious. Providing reassurance and updates.'),
+      (4, 1, '2026-02-03', 'day', 'routine',
+       '{"bloodPressure": "135/88", "pulse": 74, "temperature": 36.8, "respiratoryRate": 16, "oxygenSaturation": 97}',
+       'Patient recovering well. Blood pressure slightly elevated but stable. Blood glucose monitoring continues - readings between 6.0-7.5 mmol/L throughout the day. Patient walked in corridor twice with physiotherapy. Tolerating diet well. No concerns overnight.'),
+  
+     (1, 1, '2026-02-02', 'night', 'routine',
+      '{"bloodPressure": "130/82", "pulse": 70, "temperature": 36.9, "respiratoryRate": 15, "oxygenSaturation": 98}',
+      'Quiet night. Patient slept well. No complaints. Morning blood glucose 6.4 mmol/L. All medications given as prescribed. Ready for physiotherapy session this morning.'),
+  
+  
+    (2, 2, '2026-02-03', 'night', 'urgent',
+      '{"bloodPressure": "105/68", "pulse": 88, "temperature": 37.5, "respiratoryRate": 20, "oxygenSaturation": 95}',
+      'Post-cath lab. Procedure completed successfully. Two stents placed in LAD. Groin site checked hourly - no bleeding or hematoma. Patient on bedrest for 6 hours post-procedure. Some chest discomfort reported - ECG unchanged. Cardiology team aware. Continue cardiac monitoring.'),
+  
+    (2, 2, '2026-01-30', 'day', 'critical',
+      '{"bloodPressure": "98/60", "pulse": 112, "temperature": 38.0, "respiratoryRate": 22, "oxygenSaturation": 93}',
+      'Patient transferred from cath lab to CCU. Significant ST elevation MI. Primary PCI performed. Patient anxious and experiencing chest pain 4/10. Morphine administered with good effect. Continuous cardiac monitoring. Family present and updated by cardiology team.'),
+    (3, 3, '2026-02-03', 'night', 'urgent',
+    '{"bloodPressure": "95/60", "pulse": 110, "temperature": 38.2, "respiratoryRate": 24, "oxygenSaturation": 92}',
+    'Patient showing gradual improvement. Vasopressor requirements decreased - now on norepinephrine 0.10 mcg/kg/min. O2 requirements stable at 45% FiO2. Temperature trending down. Blood culture results pending. Continue current management. Family visited this evening, updated on progress.'),
+  
+    (3, 3, '2026-02-01', 'day', 'critical',
+    '{"bloodPressure": "86/52", "pulse": 128, "temperature": 39.5, "respiratoryRate": 30, "oxygenSaturation": 87}',
+    'Patient deteriorating. Increased vasopressor support required. Blood cultures positive for E. coli - antibiotics adjusted per microbiology. Requiring 65% FiO2. Consultant reviewed - considering intubation if no improvement. Renal function declining - urine output <0.5ml/kg/hr. Family meeting held.'),
+  
+    (3, 3, '2026-01-29', 'day', 'critical',
+    '{"bloodPressure": "90/56", "pulse": 122, "temperature": 39.0, "respiratoryRate": 28, "oxygenSaturation": 89}',
+    'New ICU admission. Septic shock secondary to pneumonia. Requiring high-flow oxygen and vasopressor support. Broad-spectrum antibiotics commenced. Central line inserted. Arterial line in situ. Hourly obs and bloods. Family very anxious - senior team to speak with them.'),
+  (5, 4, '2026-02-03', 'night', 'routine',
+   '{"bloodPressure": "115/70", "pulse": 66, "temperature": 36.7, "respiratoryRate": 14, "oxygenSaturation": 99}',
+   'Patient sleeping well. No pain reported. Wound dressing dry and intact. Eating and drinking normally. Bowels not yet opened post-op but patient not uncomfortable. Mobilizing independently. Discharge planned for tomorrow morning if continues to progress well.'),
+  
+  (5, 4, '2026-02-02', 'day', 'routine',
+   '{"bloodPressure": "120/75", "pulse": 70, "temperature": 36.9, "respiratoryRate": 15, "oxygenSaturation": 98}',
+   'Post-op day 1. Patient managing pain well with oral analgesia. Wound clean and dry. Tolerating light diet. Mobilized to chair this morning with minimal assistance. No nausea or vomiting. Observations stable. Plan to increase mobilization today.'),
+  
+  
+  (6, 6, '2026-02-03', 'day', 'routine',
+   '{"bloodPressure": "98/62", "pulse": 88, "temperature": 36.9, "respiratoryRate": 20, "oxygenSaturation": 97}',
+   'Significant improvement. Temperature normal for 24 hours. Respiratory rate decreased. Nebulizers now 8-hourly. Child playing with toys and eating well. Mother reports she slept through the night. Chest sounds much clearer on auscultation. Pediatric team pleased with progress - discussing discharge tomorrow.'),
+  
+  (6, 6, '2026-02-01', 'night', 'urgent',
+   '{"bloodPressure": "102/66", "pulse": 105, "temperature": 38.2, "respiratoryRate": 28, "oxygenSaturation": 93}',
+   'Child still requiring close monitoring. Increased work of breathing during night. Nebulizers given q4h with partial response. Temperature spiked to 38.5°C at 0200hrs - paracetamol given. Mother stayed at bedside throughout. Child taking small amounts of fluid. Pediatric registrar reviewed overnight.'),
+  
+  (6, 6, '2026-01-29', 'day', 'urgent',
+   '{"bloodPressure": "105/70", "pulse": 110, "temperature": 38.5, "respiratoryRate": 30, "oxygenSaturation": 92}',
+   'Pediatric admission with pneumonia. IV antibiotics commenced. Requiring supplemental oxygen via nasal cannula. Moderate work of breathing with intercostal recession. Regular nebulizers. CXR shows bilateral infiltrates. Mother very anxious but coping well. Child irritable but consolable.')
     `);
-    console.log("Inserted 6 handover notes");
+    console.log("Inserted 20 handover notes");
 
     console.log("Database seeded successfully!");
     process.exit(0);
