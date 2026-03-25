@@ -10,14 +10,14 @@ const getHandoverNotes = async (req, res, next) => {
   try {
     const { urgency, date, shift } = req.query;
 
-    let handover_notes;
+    let handovers;
     if (urgency || date || shift) {
-      handover_notes = await fetchHandoverNotesByFilters(urgency, date, shift);
+      handovers = await fetchHandoverNotesByFilters(urgency, date, shift);
     } else {
-      handover_notes = await fetchHandoverNotes();
+      handovers = await fetchHandoverNotes();
     }
 
-    res.status(200).send({ handover_notes });
+    res.status(200).send({ handovers });
   } catch (err) {
     next(err);
   }
@@ -34,7 +34,7 @@ const getHandoversByBed = async (req, res, next) => {
     res.status(200).send({
       patient,
       handover_count: handovers.length,
-      handover_notes: handovers,
+      handovers: handovers,
     });
   } catch (err) {
     next(err);
@@ -57,7 +57,7 @@ const postHandover = async (req, res, next) => {
       return res.status(400).send({ msg: "Missing required fields" });
     }
     const newHandover = await createHandover(req.body);
-    res.status(201).send({ handover_note: newHandover });
+    res.status(201).send({ handover: newHandover });
   } catch (err) {
     next(err);
   }
@@ -79,7 +79,7 @@ const patchHandover = async (req, res, next) => {
       return res.status(404).send({ msg: "Handover not found" });
     }
 
-    res.status(200).send({ handover_note: updatedHandover });
+    res.status(200).send({ handover: updatedHandover });
   } catch (err) {
     next(err);
   }

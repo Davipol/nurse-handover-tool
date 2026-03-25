@@ -74,21 +74,21 @@ const seed = async () => {
        '{"bloodPressure": "132/84", "pulse": 76, "temperature": 36.9, "respiratoryRate": 16, "oxygenSaturation": 97}',
        'Patient stable overnight. Blood glucose levels well controlled at 6.2 mmol/L. Continue current medication regimen. Patient ambulating well. No complaints of chest pain.'),
       
-(1, 7, '2026-02-03', 'day', 'urgent',
- '{"bloodPressure": "145/92", "pulse": 135, "temperature": 37.0, "respiratoryRate": 18, "oxygenSaturation": 96}',
- 'Patient in fast AF. Rate poorly controlled despite medication. Feeling palpitations and slight SOB. Cardiology team reviewed - considering cardioversion if rate does not settle. IV metoprolol administered. Continue cardiac monitoring.'),
+      (1, 7, '2026-02-03', 'day', 'urgent',
+        '{"bloodPressure": "145/92", "pulse": 135, "temperature": 37.0, "respiratoryRate": 18, "oxygenSaturation": 96}',
+        'Patient in fast AF. Rate poorly controlled despite medication. Feeling palpitations and slight SOB. Cardiology team reviewed - considering cardioversion if rate does not settle. IV metoprolol administered. Continue cardiac monitoring.'),
 
-(4, 7, '2026-02-02', 'night', 'urgent',
- '{"bloodPressure": "140/88", "pulse": 142, "temperature": 36.9, "respiratoryRate": 20, "oxygenSaturation": 95}',
- 'Patient went into AF at 0200hrs. HR 140-150. Patient symptomatic with chest discomfort and anxiety. Cardiology consulted. Rate control initiated. Monitoring closely.'),
+      (4, 7, '2026-02-02', 'night', 'urgent',
+        '{"bloodPressure": "140/88", "pulse": 142, "temperature": 36.9, "respiratoryRate": 20, "oxygenSaturation": 95}',
+        'Patient went into AF at 0200hrs. HR 140-150. Patient symptomatic with chest discomfort and anxiety. Cardiology consulted. Rate control initiated. Monitoring closely.'),
 
-(4, 8, '2026-02-03', 'day', 'routine',
- '{"bloodPressure": "128/78", "pulse": 72, "temperature": 36.7, "respiratoryRate": 14, "oxygenSaturation": 98}',
- 'Patient stable. Admitted for investigation of chest pain. Troponins negative. ECG normal. Stress test planned for tomorrow. No chest pain overnight. Comfortable on current medication.'),
+      (4, 8, '2026-02-03', 'day', 'routine',
+        '{"bloodPressure": "128/78", "pulse": 72, "temperature": 36.7, "respiratoryRate": 14, "oxygenSaturation": 98}',
+        'Patient stable. Admitted for investigation of chest pain. Troponins negative. ECG normal. Stress test planned for tomorrow. No chest pain overnight. Comfortable on current medication.'),
 
- (2, 9, '2026-02-03', 'day', 'critical',
- '{"bloodPressure": "110/70", "pulse": 98, "temperature": 36.8, "respiratoryRate": 22, "oxygenSaturation": 97}',
- 'RTC victim. Suspected fractured femur and possible head injury. GCS 14. CT scan completed - no intracranial bleed. Ortho team consulted. Pain management ongoing. Awaiting theatre slot for femur fixation. Family present.'),
+      (2, 9, '2026-02-03', 'day', 'critical',
+        '{"bloodPressure": "110/70", "pulse": 98, "temperature": 36.8, "respiratoryRate": 22, "oxygenSaturation": 97}',
+        'RTC victim. Suspected fractured femur and possible head injury. GCS 14. CT scan completed - no intracranial bleed. Ortho team consulted. Pain management ongoing. Awaiting theatre slot for femur fixation. Family present.'),
 
       (1, 1, '2026-01-28', 'night', 'urgent',
        '{"bloodPressure": "158/95", "pulse": 92, "temperature": 37.2, "respiratoryRate": 18, "oxygenSaturation": 95}',
@@ -98,29 +98,29 @@ const seed = async () => {
        '{"bloodPressure": "95/62", "pulse": 118, "temperature": 38.1, "respiratoryRate": 24, "oxygenSaturation": 92}',
        'Patient admitted at 0300hrs with acute chest pain. Cardiology consult requested - Dr. Lee attending. ECG shows ST elevation. Preparing for emergency cath lab. Patient anxious. Family notified and present.'),
       
-(2, 10, '2026-02-03', 'night', 'urgent',
- '{"bloodPressure": "118/75", "pulse": 88, "temperature": 37.8, "respiratoryRate": 16, "oxygenSaturation": 99}',
- 'Right lower quadrant pain. Surgical team reviewed - ? appendicitis. Bloods show raised WCC. USS abdomen requested for morning. NBM since midnight. IV fluids running. Pain controlled with morphine.'),
+      (2, 10, '2026-02-03', 'night', 'urgent',
+        '{"bloodPressure": "118/75", "pulse": 88, "temperature": 37.8, "respiratoryRate": 16, "oxygenSaturation": 99}',
+        'Right lower quadrant pain. Surgical team reviewed - ? appendicitis. Bloods show raised WCC. USS abdomen requested for morning. NBM since midnight. IV fluids running. Pain controlled with morphine.'),
 
       (3, 3, '2026-01-28', 'night', 'critical',
        '{"bloodPressure": "88/55", "pulse": 125, "temperature": 39.2, "respiratoryRate": 28, "oxygenSaturation": 88}',
        'Septic patient requiring close monitoring. On vasopressor support (norepinephrine 0.15 mcg/kg/min). Increasing O2 requirements - now on 60% FiO2. Blood cultures drawn. Awaiting ICU consultant review. Family meeting scheduled for 0800hrs.'),
       
-(3, 11, '2026-02-03', 'night', 'critical',
- '{"bloodPressure": "92/58", "pulse": 115, "temperature": 38.9, "respiratoryRate": 32, "oxygenSaturation": 86}',
- 'Intubated and ventilated. ARDS secondary to pneumonia. Very high FiO2 requirements (90%). Proning attempted with minimal improvement. On vasopressor and inotropic support. Renal replacement therapy commenced. Prognosis guarded. Family meeting held - aware of severity.'),
+      (3, 11, '2026-02-03', 'night', 'critical',
+      '{"bloodPressure": "92/58", "pulse": 115, "temperature": 38.9, "respiratoryRate": 32, "oxygenSaturation": 86}',
+      'Intubated and ventilated. ARDS secondary to pneumonia. Very high FiO2 requirements (90%). Proning attempted with minimal improvement. On vasopressor and inotropic support. Renal replacement therapy commenced. Prognosis guarded. Family meeting held - aware of severity.'),
 
       (5, 4, '2026-01-29', 'day', 'routine',
        '{"bloodPressure": "118/72", "pulse": 68, "temperature": 36.8, "respiratoryRate": 14, "oxygenSaturation": 99}',
        'Post-op day 2. Wound site clean, dry, intact. Patient tolerating regular diet. Pain well controlled with oral analgesia (3/10). Ambulating in hallway with assistance. Plan for discharge tomorrow if continues to progress well.'),
       
-(3, 12, '2026-02-03', 'day', 'critical',
- '{"bloodPressure": "105/65", "pulse": 95, "temperature": 36.0, "respiratoryRate": 16, "oxygenSaturation": 95}',
- 'Post VF arrest. Therapeutic hypothermia protocol day 2. Sedated and ventilated. Neurological assessment pending rewarming. Cardiac function improving - echo shows good LV function. Coronary angiography showed LAD occlusion - stent placed. Awaiting neuro prognosis.'),
+      (3, 12, '2026-02-03', 'day', 'critical',
+      '{"bloodPressure": "105/65", "pulse": 95, "temperature": 36.0, "respiratoryRate": 16, "oxygenSaturation": 95}',
+      'Post VF arrest. Therapeutic hypothermia protocol day 2. Sedated and ventilated. Neurological assessment pending rewarming. Cardiac function improving - echo shows good LV function. Coronary angiography showed LAD occlusion - stent placed. Awaiting neuro prognosis.'),
 
-(5, 13, '2026-02-03', 'day', 'urgent',
- '{"bloodPressure": "135/82", "pulse": 95, "temperature": 37.3, "respiratoryRate": 26, "oxygenSaturation": 90}',
- 'COPD exacerbation. Increased SOB and sputum production. On 2L O2 via nasal cannula. Nebulizers q4h. Steroids and antibiotics commenced. Chest physiotherapy. Respiratory team reviewed - may need NIV if deteriorates.'),
+      (5, 13, '2026-02-03', 'day', 'urgent',
+      '{"bloodPressure": "135/82", "pulse": 95, "temperature": 37.3, "respiratoryRate": 26, "oxygenSaturation": 90}',
+      'COPD exacerbation. Increased SOB and sputum production. On 2L O2 via nasal cannula. Nebulizers q4h. Steroids and antibiotics commenced. Chest physiotherapy. Respiratory team reviewed - may need NIV if deteriorates.'),
 
       (6, 6, '2026-01-28', 'night', 'urgent',
        '{"bloodPressure": "105/68", "pulse": 115, "temperature": 38.8, "respiratoryRate": 32, "oxygenSaturation": 91}',
@@ -133,9 +133,9 @@ const seed = async () => {
       '{"bloodPressure": "130/82", "pulse": 70, "temperature": 36.9, "respiratoryRate": 15, "oxygenSaturation": 98}',
       'Quiet night. Patient slept well. No complaints. Morning blood glucose 6.4 mmol/L. All medications given as prescribed. Ready for physiotherapy session this morning.'),
   
-  (5, 14, '2026-02-03', 'night', 'routine',
- '{"bloodPressure": "122/76", "pulse": 78, "temperature": 36.6, "respiratoryRate": 16, "oxygenSaturation": 96}',
- 'Chest drain in situ for pneumothorax. Minimal bubbling. CXR this AM shows good lung re-expansion. Respiratory comfortable on room air. Pain well controlled. Plan to clamp drain tomorrow if CXR remains satisfactory.'),
+    (5, 14, '2026-02-03', 'night', 'routine',
+    '{"bloodPressure": "122/76", "pulse": 78, "temperature": 36.6, "respiratoryRate": 16, "oxygenSaturation": 96}',
+    'Chest drain in situ for pneumothorax. Minimal bubbling. CXR this AM shows good lung re-expansion. Respiratory comfortable on room air. Pain well controlled. Plan to clamp drain tomorrow if CXR remains satisfactory.'),
 
     (2, 2, '2026-02-03', 'night', 'urgent',
       '{"bloodPressure": "105/68", "pulse": 88, "temperature": 37.5, "respiratoryRate": 20, "oxygenSaturation": 95}',
@@ -155,30 +155,30 @@ const seed = async () => {
     (3, 3, '2026-01-29', 'day', 'critical',
     '{"bloodPressure": "90/56", "pulse": 122, "temperature": 39.0, "respiratoryRate": 28, "oxygenSaturation": 89}',
     'New ICU admission. Septic shock secondary to pneumonia. Requiring high-flow oxygen and vasopressor support. Broad-spectrum antibiotics commenced. Central line inserted. Arterial line in situ. Hourly obs and bloods. Family very anxious - senior team to speak with them.'),
-  (5, 4, '2026-02-03', 'night', 'routine',
-   '{"bloodPressure": "115/70", "pulse": 66, "temperature": 36.7, "respiratoryRate": 14, "oxygenSaturation": 99}',
-   'Patient sleeping well. No pain reported. Wound dressing dry and intact. Eating and drinking normally. Bowels not yet opened post-op but patient not uncomfortable. Mobilizing independently. Discharge planned for tomorrow morning if continues to progress well.'),
+    (5, 4, '2026-02-03', 'night', 'routine',
+    '{"bloodPressure": "115/70", "pulse": 66, "temperature": 36.7, "respiratoryRate": 14, "oxygenSaturation": 99}',
+    'Patient sleeping well. No pain reported. Wound dressing dry and intact. Eating and drinking normally. Bowels not yet opened post-op but patient not uncomfortable. Mobilizing independently. Discharge planned for tomorrow morning if continues to progress well.'),
   
-  (5, 4, '2026-02-02', 'day', 'routine',
+    (5, 4, '2026-02-02', 'day', 'routine',
    '{"bloodPressure": "120/75", "pulse": 70, "temperature": 36.9, "respiratoryRate": 15, "oxygenSaturation": 98}',
    'Post-op day 1. Patient managing pain well with oral analgesia. Wound clean and dry. Tolerating light diet. Mobilized to chair this morning with minimal assistance. No nausea or vomiting. Observations stable. Plan to increase mobilization today.'),
   
   
-  (6, 6, '2026-02-03', 'day', 'routine',
+    (6, 6, '2026-02-03', 'day', 'routine',
    '{"bloodPressure": "98/62", "pulse": 88, "temperature": 36.9, "respiratoryRate": 20, "oxygenSaturation": 97}',
    'Significant improvement. Temperature normal for 24 hours. Respiratory rate decreased. Nebulizers now 8-hourly. Child playing with toys and eating well. Mother reports she slept through the night. Chest sounds much clearer on auscultation. Pediatric team pleased with progress - discussing discharge tomorrow.'),
   
-  (6, 6, '2026-02-01', 'night', 'urgent',
+    (6, 6, '2026-02-01', 'night', 'urgent',
    '{"bloodPressure": "102/66", "pulse": 105, "temperature": 38.2, "respiratoryRate": 28, "oxygenSaturation": 93}',
    'Child still requiring close monitoring. Increased work of breathing during night. Nebulizers given q4h with partial response. Temperature spiked to 38.5°C at 0200hrs - paracetamol given. Mother stayed at bedside throughout. Child taking small amounts of fluid. Pediatric registrar reviewed overnight.'),
   
-  (6, 6, '2026-01-29', 'day', 'urgent',
+    (6, 6, '2026-01-29', 'day', 'urgent',
    '{"bloodPressure": "105/70", "pulse": 110, "temperature": 38.5, "respiratoryRate": 30, "oxygenSaturation": 92}',
    'Pediatric admission with pneumonia. IV antibiotics commenced. Requiring supplemental oxygen via nasal cannula. Moderate work of breathing with intercostal recession. Regular nebulizers. CXR shows bilateral infiltrates. Mother very anxious but coping well. Child irritable but consolable.'),
    (6, 15, '2026-02-03', 'day', 'urgent',
  '{"bloodPressure": "90/55", "pulse": 145, "temperature": 38.0, "respiratoryRate": 45, "oxygenSaturation": 92}',
  'Infant with bronchiolitis. Increased work of breathing with nasal flaring and subcostal recession. On 1L O2. Tolerating small frequent feeds. NG tube in situ. Suction PRN. Mother at bedside. Pediatric team monitoring - threshold for escalation if oxygen requirements increase.'), 
- (6, 16, '2026-02-03', 'night', 'routine',
+  (6, 16, '2026-02-03', 'night', 'routine',
  '{"bloodPressure": "95/60", "pulse": 110, "temperature": 37.2, "respiratoryRate": 22, "oxygenSaturation": 98}',
  'Admitted following febrile seizure at home. Temperature settled with paracetamol. No further seizure activity. Child alert and playing. Viral illness suspected. Observations stable. Plan for discharge tomorrow if remains well. Parents reassured.')  
  `);
