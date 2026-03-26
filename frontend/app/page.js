@@ -1,82 +1,76 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 
-export default function Home() {
+const Dashboard = () => {
   const [units, setUnits] = useState([]);
-  const [patients, setPatients] = useState([]);
-  const [handovers, setHandovers] = useState([]);
-  const [nurses, setNurses] = useState([]);
+  const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchUnits = async () => {
       try {
         const unitsRes = await fetch("http://localhost:9090/api/units");
         const unitData = await unitsRes.json();
         console.log("Units Data", unitData);
         setUnits(unitData.units);
 
-        const patientsRes = await fetch("http://localhost:9090/api/patients");
-        const patientsData = await patientsRes.json();
-        setPatients(patientsData.patients);
-
-        const handoversRes = await fetch("http://localhost:9090/api/handovers");
-        const handoversData = await handoversRes.json();
-
-        setHandovers(handoversData.handovers || []);
-
-        const nursesRes = await fetch("http://localhost:9090/api/nurses");
-        const nursesData = await nursesRes.json();
-        setNurses(nursesData.nurses);
-
         setLoading(false);
       } catch (err) {
-        console.error("Error fetching data:", err);
+        console.error("Error fetching units:", err);
+        setError("There was an error loading the page");
         setLoading(false);
       }
     };
-    fetchData();
+    fetchUnits();
   }, []);
 
-  if (loading) return <div>Loading...</div>;
+  if (error)
+    return (
+      <div className="flex justify-center text-2xl font-bold text-red-700">
+        {error}
+      </div>
+    );
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-xl">Loading...</div>
+      </div>
+    );
+  }
+
   return (
-    <main className="p-8">
-      <h1 className="text-3xl font-bold flex justify-center">
-        Nurse Handover Tool
-      </h1>
-      <section>
-        <h2 className="text-2xl font-bold flex justify-center">Units:</h2>
-        <ul>
+    <div className="min-h-screen bg-gray-50">
+      {/* Header */}
+      <div className="bg-white border-b border-gray-200 px-4 sm:px-6 py-3">
+        <h1 className="text-xl font-semibold text-gray-900">
+          Nurse Handover Tool
+        </h1>
+      </div>
+
+      {/* Main Content */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-6">
+          Units ({units.length})
+        </h2>
+
+        {/* Units Grid - Square Cards */}
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {units.map((unit) => (
-            <li key={unit.id}>{unit.name}</li>
+            <Link key={unit.id} href={`/units/${unit.id}`} className="block">
+              <div className="bg-white p-6 rounded-lg shadow border border-gray-200 hover:shadow-lg hover:border-blue-300 transition aspect-square flex flex-col items-center justify-center text-center">
+                <h3 className="font-semibold text-xl text-gray-900">
+                  {unit.name}
+                </h3>
+                <p className="text-sm text-gray-500 mt-2">View patients</p>
+              </div>
+            </Link>
           ))}
-        </ul>
-      </section>
-      <section>
-        <h2 className="text-2xl font-bold flex justify-center">Patients:</h2>
-        <ul>
-          {patients.map((patient) => (
-            <li key={patient.id}>{patient.last_name}</li>
-          ))}
-        </ul>
-      </section>
-      <section>
-        <h2 className="text-2xl font-bold flex justify-center">Handovers:</h2>
-        <ul>
-          {handovers.map((handover) => (
-            <li key={handover.id}>{handover.content}</li>
-          ))}
-        </ul>
-      </section>
-      <section>
-        <h2 className="text-2xl font-bold flex justify-center">Nurses:</h2>
-        <ul>
-          {nurses.map((nurse) => (
-            <li key={nurse.id}>{nurse.name}</li>
-          ))}
-        </ul>
-      </section>
-    </main>
+        </div>
+      </div>
+    </div>
   );
-}
+};
+
+export default Dashboard;
