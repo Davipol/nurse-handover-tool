@@ -14,6 +14,7 @@ export default function Home() {
       try {
         const unitsRes = await fetch("http://localhost:9090/api/units");
         const unitData = await unitsRes.json();
+        console.log("Units Data", unitData);
         setUnits(unitData.units);
 
         const patientsRes = await fetch("http://localhost:9090/api/patients");
@@ -22,7 +23,7 @@ export default function Home() {
 
         const handoversRes = await fetch("http://localhost:9090/api/handovers");
         const handoversData = await handoversRes.json();
-        console.log("These are the handovers data!!", handoversData);
+
         setHandovers(handoversData.handovers || []);
 
         const nursesRes = await fetch("http://localhost:9090/api/nurses");
