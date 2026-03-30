@@ -36,7 +36,7 @@ const fetchHandoverNotesByFilters = async (urgency, date, shift) => {
 
 const fetchHandoversByBed = async (bed) => {
   const patientResult = await db.query(
-    "SELECT id, first_name, last_name, bed, status, unit_id FROM patients WHERE bed = $1",
+    "SELECT * FROM patients WHERE bed = $1",
     [bed],
   );
 
@@ -45,7 +45,11 @@ const fetchHandoversByBed = async (bed) => {
   if (!patient) return { patient: null, handovers: [] };
 
   const handoversResult = await db.query(
-    "SELECT * FROM handover_notes WHERE patient_id = $1 ORDER BY handover_date DESC, created_at DESC",
+    `SELECT h.*, n.name as nurse_name, n.email as nurse_email
+     FROM handover_notes h
+     JOIN nurses n ON h.nurse_id = n.id
+     WHERE h.patient_id = $1
+     ORDER BY h.handover_date DESC, h.created_at DESC`,
     [patient.id],
   );
 
