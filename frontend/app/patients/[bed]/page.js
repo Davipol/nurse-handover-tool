@@ -174,17 +174,19 @@ const PatientPage = () => {
               {aiSummary.ai_summary
                 // Format summary to remove "**" and "##"
                 .replace(/##\s*/g, "") // Remove ##
+                .replace(/\*\*SBAR\*\*/g, "") // Remove word "SBAR"
+                .replace(/\*\*([^*]+)\*\*/g, "$1") // Remove any other **
                 .split("\n")
                 .map((line, index) => {
                   // Check if line starts with **label:**
-                  const boldMatch = line.match(/^\*\*(.+?):\*\*(.+)$/);
-                  if (boldMatch) {
+                  const labelMatch = line.match(/^([A-Z][a-z]+):\s*(.+)$/);
+                  if (labelMatch) {
                     return (
                       <p key={index}>
-                        <strong className="font-semibold">
-                          {boldMatch[1]}:
-                        </strong>
-                        {boldMatch[2]}
+                        <strong className="font-semibold text-gray-900">
+                          {labelMatch[1]}:
+                        </strong>{" "}
+                        {labelMatch[2]}
                       </p>
                     );
                   }
