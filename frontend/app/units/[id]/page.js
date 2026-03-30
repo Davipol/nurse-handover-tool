@@ -10,6 +10,8 @@ export default function UnitPage() {
   const { id } = params;
 
   const [unit, setUnit] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [urgencyFilter, setUrgencyFilter] = useState("all");
   const [patients, setPatients] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -27,7 +29,29 @@ export default function UnitPage() {
           `http://localhost:9090/api/patients?unit=${id}`,
         );
         const patientsData = await patientsRes.json();
-        setPatients(patientsData.patients || []);
+        // Fetch all handovers to get urgency
+        const handoversRes = await fetch(`http://localhost:9090/api/handovers`);
+        const handoversData = await handoversRes.json();
+
+        // Add urgency from latest handover to each patient
+        const patientsWithUrgency = (patientsData.patients || []).map(
+          (patient) => {
+            const patientHandovers = (handoversData.handovers || [])
+              .filter((h) => h.patient_id === patient.id)
+              .sort(
+                (a, b) => new Date(b.handover_date) - new Date(a.handover_date),
+              );
+
+            const latestHandover = patientHandovers[0];
+            return {
+              ...patient,
+              urgency: latestHandover?.urgency || "routine",
+            };
+          },
+        );
+
+        setPatients(patientsWithUrgency);
+        setLoading(false);
 
         setLoading(false);
       } catch (err) {
@@ -64,6 +88,18 @@ export default function UnitPage() {
       </div>
     );
   }
+  // Filter by search and urgency
+  const filteredPatients = patients.filter((patient) => {
+    const matchesSearch =
+      patient.first_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      patient.last_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      patient.bed.toLowerCase().includes(searchTerm.toLowerCase());
+
+    const matchesUrgency =
+      urgencyFilter === "all" || patient.urgency === urgencyFilter;
+
+    return matchesSearch && matchesUrgency;
+  });
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -90,11 +126,66 @@ export default function UnitPage() {
             Patients ({patients.length})
           </h2>
 
-          {patients.length === 0 ? (
-            <p className="text-gray-500">No patients in this unit</p>
+          {/* Search Bar */}
+          <div className="mb-4">
+            <input
+              type="text"
+              placeholder="Search by name or bed number..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            />
+          </div>
+
+          {/* Urgency Filter Buttons */}
+          <div className="flex gap-2 mb-4 flex-wrap">
+            <button
+              onClick={() => setUrgencyFilter("all")}
+              className={`px-4 py-2 rounded-lg font-medium transition ${
+                urgencyFilter === "all"
+                  ? "bg-blue-500 text-white"
+                  : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+              }`}
+            >
+              All
+            </button>
+            <button
+              onClick={() => setUrgencyFilter("critical")}
+              className={`px-4 py-2 rounded-lg font-medium transition ${
+                urgencyFilter === "critical"
+                  ? "bg-red-500 text-white"
+                  : "bg-red-100 text-red-700 hover:bg-red-200"
+              }`}
+            >
+              Critical
+            </button>
+            <button
+              onClick={() => setUrgencyFilter("urgent")}
+              className={`px-4 py-2 rounded-lg font-medium transition ${
+                urgencyFilter === "urgent"
+                  ? "bg-orange-500 text-white"
+                  : "bg-orange-100 text-orange-700 hover:bg-orange-200"
+              }`}
+            >
+              Urgent
+            </button>
+            <button
+              onClick={() => setUrgencyFilter("routine")}
+              className={`px-4 py-2 rounded-lg font-medium transition ${
+                urgencyFilter === "routine"
+                  ? "bg-green-500 text-white"
+                  : "bg-green-100 text-green-700 hover:bg-green-200"
+              }`}
+            >
+              Routine
+            </button>
+          </div>
+
+          {filteredPatients.length === 0 ? (
+            <p className="text-gray-500">No patients match your search</p>
           ) : (
             <div className="space-y-4">
-              {patients.map((patient) => (
+              {filteredPatients.map((patient) => (
                 <Link
                   key={patient.id}
                   href={`/patients/${patient.bed}`}
@@ -112,6 +203,19 @@ export default function UnitPage() {
                         Status: {patient.status}
                       </p>
                     </div>
+                    {patient.urgency && (
+                      <span
+                        className={`px-2 py-1 rounded-full text-xs font-semibold uppercase ${
+                          patient.urgency === "critical"
+                            ? "bg-red-200 text-red-800"
+                            : patient.urgency === "urgent"
+                              ? "bg-orange-200 text-orange-800"
+                              : "bg-green-200 text-green-800"
+                        }`}
+                      >
+                        {patient.urgency}
+                      </span>
+                    )}
                   </div>
                 </Link>
               ))}
