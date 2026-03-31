@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, Calendar, Sparkles, Stethoscope } from "lucide-react";
+import { ArrowLeft, Calendar, Sparkles, Stethoscope, Plus } from "lucide-react";
 
 const PatientPage = () => {
   const params = useParams();
@@ -80,7 +80,6 @@ const PatientPage = () => {
       return []; // If parsing fails, return empty array
     }
   })();
-  console.log("CONDITIONS", conditions);
 
   const urgencyColors = {
     critical: "bg-red-100 border-red-400 border-l-4",
@@ -273,6 +272,17 @@ const PatientPage = () => {
             </div>
           )}
         </div>
+      </div>
+      {/* Floating button for new handover */}
+      <Link
+        href={`/handovers/new?bed=${bed}`}
+        className="fixed bottom-8 right-8 bg-blue-600 hover:bg-blue-700 text-white rounded-full p-4 shadow-lg hover:shadow-xl transition-all duration-200"
+      >
+        <Plus className="w-6 h-6" />
+      </Link>
+      {/* Tooltip */}
+      <div className="absolute bottom-full right-0 mb-2 px-3 py-1 bg-gray-900 text-white text-sm rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
+        Create New Handover
       </div>
     </div>
   );
