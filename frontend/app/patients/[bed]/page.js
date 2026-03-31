@@ -2,13 +2,21 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, Calendar, Sparkles, Stethoscope, Plus } from "lucide-react";
+import {
+  ArrowLeft,
+  Calendar,
+  Sparkles,
+  Stethoscope,
+  Plus,
+  Activity,
+} from "lucide-react";
 
 const PatientPage = () => {
   const params = useParams();
   const { bed } = params;
 
   const [patient, setPatient] = useState(null);
+  const [showMenu, setShowMenu] = useState(false);
   const [handovers, setHandovers] = useState([]);
   const [aiSummary, setAiSummary] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -274,16 +282,45 @@ const PatientPage = () => {
         </div>
       </div>
       {/* Floating button for new handover */}
-      <Link
-        href={`/handovers/new?bed=${bed}`}
-        className="fixed bottom-8 right-8 bg-blue-600 hover:bg-blue-700 text-white rounded-full p-4 shadow-lg hover:shadow-xl transition-all duration-200"
-      >
-        <Plus className="w-6 h-6" />
-      </Link>
-      {/* Tooltip */}
-      <div className="absolute bottom-full right-0 mb-2 px-3 py-1 bg-gray-900 text-white text-sm rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
-        Create New Handover
+      <div className="fixed bottom-8 right-8 z-50">
+        {/* Menu (shows above button) */}
+        {showMenu && (
+          <div className="absolute bottom-20 right-0 bg-white rounded-lg shadow-2xl border-2 border-blue-400 py-2 mb-2 w-48 ring-4 ring-blue-100">
+            <Link
+              href={`/handovers/new?bed=${bed}`}
+              className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition"
+            >
+              <Plus className="w-5 h-5 text-blue-600" />
+              <span className="font-medium text-gray-900">New Handover</span>
+            </Link>
+            <Link
+              href={`/vitals/new?bed=${bed}`}
+              className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition"
+            >
+              <Activity className="w-5 h-5 text-green-600" />
+              <span className="font-medium text-gray-900">Record Vitals</span>
+            </Link>
+          </div>
+        )}
+
+        {/* Main FAB Button */}
+        <button
+          onClick={() => setShowMenu(!showMenu)}
+          className="bg-blue-600 hover:bg-blue-700 text-white rounded-full p-4 shadow-lg hover:shadow-xl transition-all duration-200"
+        >
+          <Plus
+            className={`w-6 h-6 transition-transform ${showMenu ? "rotate-45" : ""}`}
+          />
+        </button>
       </div>
+
+      {/* Overlay to close menu when clicking outside */}
+      {showMenu && (
+        <div
+          className="fixed inset-0 z-40"
+          onClick={() => setShowMenu(false)}
+        />
+      )}
     </div>
   );
 };
