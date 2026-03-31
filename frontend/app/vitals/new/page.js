@@ -18,6 +18,7 @@ export default function NewVitalsPage() {
   const [formData, setFormData] = useState({
     nurse_id: "",
     shift: "day",
+    time: "",
     blood_pressure: "",
     pulse: "",
     temperature: "",
@@ -39,7 +40,9 @@ export default function NewVitalsPage() {
         const nursesRes = await fetch("http://localhost:9090/api/nurses");
         const nursesData = await nursesRes.json();
         setNurses(nursesData.nurses);
-
+        const now = new Date();
+        const currentTime = now.toTimeString().slice(0, 5); // Format: "14:30"
+        setFormData((prev) => ({ ...prev, time: currentTime }));
         setLoading(false);
       } catch (err) {
         console.error("Error fetching data:", err);
@@ -64,11 +67,12 @@ export default function NewVitalsPage() {
         respiratoryRate: parseInt(formData.respiratory_rate),
         oxygenSaturation: parseInt(formData.oxygen_saturation),
       };
-
+      const today = new Date().toISOString().split("T")[0];
+      const handoverDateTime = `${today}T${formData.time}:00`;
       const handoverData = {
         nurse_id: parseInt(formData.nurse_id),
         patient_id: patient.id,
-        handover_date: new Date().toISOString().split("T")[0],
+        handover_date: handoverDateTime,
         shift: formData.shift,
         urgency: "routine",
         vitals: JSON.stringify(vitals),
@@ -201,7 +205,21 @@ export default function NewVitalsPage() {
                 </label>
               </div>
             </div>
-
+            {/* Time field */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Time *
+              </label>
+              <input
+                type="time"
+                value={formData.time}
+                onChange={(e) =>
+                  setFormData({ ...formData, time: e.target.value })
+                }
+                required
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+            </div>
             {/* Vitals Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
