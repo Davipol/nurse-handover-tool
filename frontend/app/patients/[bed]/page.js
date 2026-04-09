@@ -79,13 +79,14 @@ const PatientPage = () => {
       </div>
     );
   }
+
   const conditions = (() => {
-    if (!patient.conditions) return []; // Handle undefined/null
+    if (!patient.conditions) return [];
     if (Array.isArray(patient.conditions)) return patient.conditions;
     try {
       return JSON.parse(patient.conditions);
     } catch {
-      return []; // If parsing fails, return empty array
+      return [];
     }
   })();
 
@@ -179,13 +180,11 @@ const PatientPage = () => {
             </h2>
             <div className="text-gray-800 space-y-3">
               {aiSummary.ai_summary
-                // Format summary to remove "**" and "##"
-                .replace(/##\s*/g, "") // Remove ##
-                .replace(/\*\*SBAR\*\*/g, "") // Remove word "SBAR"
-                .replace(/\*\*([^*]+)\*\*/g, "$1") // Remove any other **
+                .replace(/##\s*/g, "")
+                .replace(/\*\*SBAR\*\*/g, "")
+                .replace(/\*\*([^*]+)\*\*/g, "$1")
                 .split("\n")
                 .map((line, index) => {
-                  // Check if line starts with **label:**
                   const labelMatch = line.match(/^([A-Z][a-z]+):\s*(.+)$/);
                   if (labelMatch) {
                     return (
@@ -223,7 +222,6 @@ const PatientPage = () => {
                   key={handover.id}
                   className={`p-5 rounded-lg ${urgencyColors[handover.urgency]}`}
                 >
-                  {/* Header */}
                   <div className="flex justify-between items-start mb-3">
                     <div>
                       <span
@@ -248,7 +246,6 @@ const PatientPage = () => {
                       </p>
                     </div>
 
-                    {/* Vitals */}
                     {handover.vitals && (
                       <div className="text-sm text-gray-700 bg-white bg-opacity-50 rounded p-2">
                         <p>
@@ -271,7 +268,6 @@ const PatientPage = () => {
                     )}
                   </div>
 
-                  {/* Content */}
                   <div className="mt-3 text-gray-800">
                     <p>{handover.content}</p>
                   </div>
@@ -281,9 +277,9 @@ const PatientPage = () => {
           )}
         </div>
       </div>
-      {/* Floating button for new handover */}
+
+      {/* Floating Action Button with Menu */}
       <div className="fixed bottom-8 right-8 z-50">
-        {/* Menu (shows above button) */}
         {showMenu && (
           <div className="absolute bottom-20 right-0 bg-white rounded-lg shadow-2xl border-2 border-blue-400 py-2 mb-2 w-48 ring-4 ring-blue-100">
             <Link
@@ -303,7 +299,6 @@ const PatientPage = () => {
           </div>
         )}
 
-        {/* Main FAB Button */}
         <button
           onClick={() => setShowMenu(!showMenu)}
           className="bg-blue-600 hover:bg-blue-700 text-white rounded-full p-4 shadow-lg hover:shadow-xl transition-all duration-200"
@@ -314,7 +309,6 @@ const PatientPage = () => {
         </button>
       </div>
 
-      {/* Overlay to close menu when clicking outside */}
       {showMenu && (
         <div
           className="fixed inset-0 z-40"
