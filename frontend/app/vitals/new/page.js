@@ -41,7 +41,7 @@ export default function NewVitalsPage() {
         const nursesData = await nursesRes.json();
         setNurses(nursesData.nurses);
         const now = new Date();
-        const currentTime = now.toTimeString().slice(0, 5); // Format: "14:30"
+        const currentTime = now.toTimeString().slice(0, 5);
         setFormData((prev) => ({ ...prev, time: currentTime }));
         setLoading(false);
       } catch (err) {
