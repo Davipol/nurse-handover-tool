@@ -20,11 +20,11 @@ export default function NewHandoverPage() {
     shift: "day",
     time: "",
     urgency: "routine",
-    blood_pressure: "",
-    pulse: "",
-    temperature: "",
-    respiratory_rate: "",
-    oxygen_saturation: "",
+    blood_pressure: "120/80",
+    pulse: "75",
+    temperature: "36.5",
+    respiratory_rate: "16",
+    oxygen_saturation: "98",
     content: "",
   });
 
@@ -273,23 +273,45 @@ export default function NewHandoverPage() {
                 Vitals
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
+                <div className="md:col-span-2">
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Blood Pressure *
                   </label>
-                  <input
-                    type="text"
-                    placeholder="120/80"
-                    value={formData.blood_pressure}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        blood_pressure: e.target.value,
-                      })
-                    }
-                    required
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  />
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="number"
+                      placeholder="120"
+                      value={formData.blood_pressure.split("/")[0]}
+                      onChange={(e) => {
+                        const systolic = e.target.value;
+                        const diastolic =
+                          formData.blood_pressure.split("/")[1] || "80";
+                        setFormData({
+                          ...formData,
+                          blood_pressure: `${systolic}/${diastolic}`,
+                        });
+                      }}
+                      required
+                      className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    />
+                    <span className="text-gray-500 font-medium text-xl">/</span>
+                    <input
+                      type="number"
+                      placeholder="80"
+                      value={formData.blood_pressure.split("/")[1]}
+                      onChange={(e) => {
+                        const systolic =
+                          formData.blood_pressure.split("/")[0] || "120";
+                        const diastolic = e.target.value;
+                        setFormData({
+                          ...formData,
+                          blood_pressure: `${systolic}/${diastolic}`,
+                        });
+                      }}
+                      required
+                      className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    />
+                  </div>
                 </div>
 
                 <div>
