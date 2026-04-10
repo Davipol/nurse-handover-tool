@@ -1,39 +1,47 @@
 const db = require("../db/connection");
-const {
-  summarizeHandovers,
-  summarizeSingleHandover,
-  summarizeUnitDay,
-} = require("../models/ai.model");
-const { fetchHandoversByBed } = require("../models/handovers.model");
+const aiModel = require("../models/ai.model");
+const handoverModel = require("../models/handovers.model");
 
-const getPatientSummary = async (req, res, next) => {
+const getPatientSummary = async (req, res) => {
   try {
     const { bed } = req.params;
+    const handoversData = await handoverModel.fetchHandoversByBed(bed);
 
-    // Get all handovers for this patient
-    const { patient, handovers } = await fetchHandoversByBed(bed);
-
-    if (!patient) {
-      return res.status(404).send({ msg: "No patient found in this bed" });
+    if (!handoversData.patient) {
+      return res.status(404).send({ msg: "Patient not found" });
     }
 
-    if (handovers.length === 0) {
+    if (!handoversData.handovers || handoversData.handovers.length === 0) {
       return res
         .status(404)
         .send({ msg: "No handovers found for this patient" });
     }
 
-    // Generate AI summary of multiple handovers for same patient
-    const summary = await summarizeHandovers(handovers);
+    // Check if cached summary exists and is up-to-date
+    const patient = handoversData.patient;
+    const currentHandoverCount = handoversData.handovers.length;
+
+    if (patient.ai_summary) {
+      console.log("Using cached AI summary");
+      return res.status(200).send({
+        ai_summary: patient.ai_summary,
+        handover_count: currentHandoverCount,
+        disclaimer: "AI-generated summary - always verify with original notes",
+      });
+    }
+
+    // Only generate if no cache exists at all
+    console.log("Generating new AI summary (no cache exists)");
+    const summary = await generateAndCacheAISummary(bed);
 
     res.status(200).send({
-      patient,
-      handover_count: handovers.length,
       ai_summary: summary,
+      handover_count: currentHandoverCount,
       disclaimer: "AI-generated summary - always verify with original notes",
     });
   } catch (err) {
-    next(err);
+    console.error("Error in getPatientSummary:", err);
+    res.status(500).send({ msg: err.message });
   }
 };
 
@@ -49,7 +57,7 @@ const getSingleHandoverSummary = async (req, res, next) => {
     if (!handover) {
       return res.status(404).send({ msg: "Handover not found" });
     }
-    const summary = await summarizeSingleHandover(handover);
+    const summary = await aiModel.summarizeSingleHandover(handover);
     res.status(200).send({
       handover_note: handover,
       ai_summary: summary,
@@ -107,7 +115,7 @@ const getUnitDailySummary = async (req, res, next) => {
     }
 
     // Generate AI summary for entire unit
-    const summary = await summarizeUnitDay(unit.name, handovers, date);
+    const summary = await aiModel.summarizeUnitDay(unit.name, handovers, date);
 
     res.status(200).send({
       unit: {
@@ -124,8 +132,41 @@ const getUnitDailySummary = async (req, res, next) => {
   }
 };
 
+const generateAndCacheAISummary = async (bed) => {
+  try {
+    const handoversData = await handoverModel.fetchHandoversByBed(bed);
+
+    if (
+      !handoversData.patient ||
+      !handoversData.handovers ||
+      handoversData.handovers.length === 0
+    ) {
+      return null;
+    }
+
+    // Generate AI summary
+    const summary = await aiModel.summarizeHandovers(handoversData.handovers);
+
+    // Cache it in the database
+    await db.query(
+      `UPDATE patients 
+       SET ai_summary = $1, 
+           ai_summary_count = $2, 
+           ai_summary_updated_at = CURRENT_TIMESTAMP 
+       WHERE id = $3`,
+      [summary, handoversData.handovers.length, handoversData.patient.id],
+    );
+
+    return summary;
+  } catch (err) {
+    console.error("Error caching AI summary:", err);
+    throw err;
+  }
+};
+
 module.exports = {
   getPatientSummary,
   getSingleHandoverSummary,
   getUnitDailySummary,
+  generateAndCacheAISummary,
 };

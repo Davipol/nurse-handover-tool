@@ -172,7 +172,7 @@ const PatientPage = () => {
         </div>
 
         {/* AI Summary */}
-        {aiSummary && (
+        {aiSummary && aiSummary.ai_summary && (
           <div className="bg-blue-50 border border-blue-200 rounded-lg shadow-md p-6 mb-6">
             <h2 className="text-xl font-bold text-blue-900 mb-3 flex items-center gap-2">
               <Sparkles className="w-4 h-4 text-orange-400" />

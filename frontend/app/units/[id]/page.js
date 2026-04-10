@@ -157,7 +157,8 @@ export default function UnitPage() {
                   : "bg-red-100 text-red-700 hover:bg-red-200"
               }`}
             >
-              Critical
+              Critical (
+              {patients.filter((p) => p.urgency === "critical").length})
             </button>
             <button
               onClick={() => setUrgencyFilter("urgent")}
@@ -167,7 +168,7 @@ export default function UnitPage() {
                   : "bg-orange-100 text-orange-700 hover:bg-orange-200"
               }`}
             >
-              Urgent
+              Urgent ({patients.filter((p) => p.urgency === "urgent").length})
             </button>
             <button
               onClick={() => setUrgencyFilter("routine")}
@@ -177,7 +178,7 @@ export default function UnitPage() {
                   : "bg-green-100 text-green-700 hover:bg-green-200"
               }`}
             >
-              Routine
+              Routine ({patients.filter((p) => p.urgency === "routine").length})
             </button>
           </div>
 
