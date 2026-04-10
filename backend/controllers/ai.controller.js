@@ -20,12 +20,16 @@ const getPatientSummary = async (req, res) => {
     // Check if cached summary exists and is up-to-date
     const patient = handoversData.patient;
     const currentHandoverCount = handoversData.handovers.length;
-
+    // Check if cache is stale
+    const isStale = patient.ai_summary_count !== currentHandoverCount;
     if (patient.ai_summary) {
-      console.log("Using cached AI summary");
+      console.log(
+        isStale ? "Using cached AI summary (stale)" : "Using cached AI summary",
+      );
       return res.status(200).send({
         ai_summary: patient.ai_summary,
         handover_count: currentHandoverCount,
+        is_stale: isStale,
         disclaimer: "AI-generated summary - always verify with original notes",
       });
     }
@@ -37,6 +41,7 @@ const getPatientSummary = async (req, res) => {
     res.status(200).send({
       ai_summary: summary,
       handover_count: currentHandoverCount,
+      is_stale: false,
       disclaimer: "AI-generated summary - always verify with original notes",
     });
   } catch (err) {

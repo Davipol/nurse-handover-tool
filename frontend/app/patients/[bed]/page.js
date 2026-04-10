@@ -20,6 +20,7 @@ const PatientPage = () => {
   const [handovers, setHandovers] = useState([]);
   const [aiSummary, setAiSummary] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [summaryUpdating, setSummaryUpdating] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -40,6 +41,12 @@ const PatientPage = () => {
           );
           const summaryData = await summaryRes.json();
           setAiSummary(summaryData);
+
+          // Check if summary needs updating
+          if (summaryData.is_stale) {
+            setSummaryUpdating(true);
+            pollForUpdatedSummary();
+          }
         }
 
         setLoading(false);
@@ -47,6 +54,32 @@ const PatientPage = () => {
         console.error("Error fetching data:", err);
         setLoading(false);
       }
+    };
+    // Poll for updated summary every 3 seconds
+    const pollForUpdatedSummary = () => {
+      const interval = setInterval(async () => {
+        try {
+          const summaryRes = await fetch(
+            `http://localhost:9090/api/patients/${bed}/summary`,
+          );
+          const summaryData = await summaryRes.json();
+
+          if (!summaryData.is_stale) {
+            // Summary is fresh now
+            setAiSummary(summaryData);
+            setSummaryUpdating(false);
+            clearInterval(interval);
+          }
+        } catch (err) {
+          console.error("Error polling summary:", err);
+        }
+      }, 3000); // Poll every 3 seconds
+
+      // Stop polling after 30 seconds
+      setTimeout(() => {
+        clearInterval(interval);
+        setSummaryUpdating(false);
+      }, 30000);
     };
     fetchData();
   }, [bed]);
@@ -177,6 +210,31 @@ const PatientPage = () => {
             <h2 className="text-xl font-bold text-blue-900 mb-3 flex items-center gap-2">
               <Sparkles className="w-4 h-4 text-orange-400" />
               AI Summary ({aiSummary.handover_count} handovers)
+              {summaryUpdating && (
+                <span className="flex items-center gap-2 text-sm font-normal text-blue-700">
+                  <svg
+                    className="animate-spin h-4 w-4"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    ></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    ></path>
+                  </svg>
+                  Updating...
+                </span>
+              )}
             </h2>
             <div className="text-gray-800 space-y-3">
               {aiSummary.ai_summary
