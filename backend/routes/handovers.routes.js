@@ -4,9 +4,11 @@ const {
   getHandoverNotes,
   postHandover,
   patchHandover,
+  voidHandover,
 } = require("../controllers/handovers.controller");
 router.get("/", getHandoverNotes);
 router.post("/", postHandover);
-router.patch("/:id", patchHandover);
+router.patch("/:id/urgency", patchHandover);
+router.patch("/:id/void", voidHandover);
 
 module.exports = router;

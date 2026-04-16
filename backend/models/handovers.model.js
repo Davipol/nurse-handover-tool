@@ -76,52 +76,25 @@ const createHandover = async (handoverData) => {
   return rows[0];
 };
 
-const updateHandover = async (id, updates) => {
-  const { shift, urgency, vitals, content } = updates;
-  const fields = [];
-  const values = [];
-  let paramCount = 1;
+const updateHandover = async (id, urgency) => {
+  const { rows } = await db.query(
+    `UPDATE handover_notes 
+     SET urgency = $1, updated_at = CURRENT_TIMESTAMP 
+     WHERE id = $2 AND is_voided = false
+     RETURNING *`,
+    [urgency, id],
+  );
+  return rows[0] || null;
+};
 
-  if (shift !== undefined) {
-    fields.push(`shift = $${paramCount}`);
-    values.push(shift);
-    paramCount++;
-  }
-
-  if (urgency !== undefined) {
-    fields.push(`urgency = $${paramCount}`);
-    values.push(urgency);
-    paramCount++;
-  }
-
-  if (vitals !== undefined) {
-    fields.push(`vitals = $${paramCount}`);
-    values.push(vitals);
-    paramCount++;
-  }
-
-  if (content !== undefined) {
-    fields.push(`content = $${paramCount}`);
-    values.push(content);
-    paramCount++;
-  }
-
-  fields.push(`updated_at = CURRENT_TIMESTAMP`);
-
-  if (fields.length === 1) {
-    return null;
-  }
-
-  values.push(id);
-
-  const query = `
-    UPDATE handover_notes 
-    SET ${fields.join(", ")} 
-    WHERE id = $${paramCount}
-    RETURNING *
-  `;
-
-  const { rows } = await db.query(query, values);
+const voidHandover = async (id, voided_by, void_reason) => {
+  const { rows } = await db.query(
+    `UPDATE handover_notes
+     SET is_voided = true, voided_by = $1, voided_at = CURRENT_TIMESTAMP, void_reason = $2
+     WHERE id = $3 AND is_voided = false
+     RETURNING *`,
+    [voided_by, void_reason, id],
+  );
   return rows[0] || null;
 };
 
@@ -131,4 +104,5 @@ module.exports = {
   fetchHandoversByBed,
   createHandover,
   updateHandover,
+  voidHandover,
 };

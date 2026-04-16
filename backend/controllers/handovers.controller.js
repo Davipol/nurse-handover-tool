@@ -85,21 +85,86 @@ const postHandover = async (req, res, next) => {
 const patchHandover = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const updates = req.body;
+    const { urgency } = req.body;
 
-    if (updates.nurse_id || updates.patient_id || updates.handover_date) {
-      return res.status(400).send({
-        msg: "Cannot update nurse_id, patient_id, or handover_date",
-      });
+    if (!urgency) {
+      return res.status(400).send({ msg: "Only urgency can be updated" });
     }
 
-    const updatedHandover = await handoverModel.updateHandover(id, updates);
+    const updatedHandover = await handoverModel.updateHandover(id, urgency);
 
     if (!updatedHandover) {
-      return res.status(404).send({ msg: "Handover not found" });
+      return res
+        .status(404)
+        .send({ msg: "Handover not found or already voided" });
     }
 
     res.status(200).send({ handover: updatedHandover });
+
+    // Regenerate AI summary in background
+    setImmediate(async () => {
+      try {
+        const patientResult = await db.query(
+          "SELECT bed FROM patients WHERE id = $1",
+          [updatedHandover.patient_id],
+        );
+        if (patientResult.rows.length > 0) {
+          const bed = patientResult.rows[0].bed;
+          await generateAndCacheAISummary(bed);
+          console.log(
+            `AI summary regenerated after urgency change for bed ${bed}`,
+          );
+        }
+      } catch (err) {
+        console.error("Failed to regenerate AI summary:", err);
+      }
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+const voidHandover = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const { voided_by, void_reason } = req.body;
+
+    if (!voided_by || !void_reason) {
+      return res
+        .status(400)
+        .send({ msg: "voided_by and void_reason are required" });
+    }
+
+    const voidedHandover = await handoverModel.voidHandover(
+      id,
+      voided_by,
+      void_reason,
+    );
+
+    if (!voidedHandover) {
+      return res
+        .status(404)
+        .send({ msg: "Handover not found or already voided" });
+    }
+
+    res.status(200).send({ handover: voidedHandover });
+
+    // Regenerate AI summary in background (voided notes excluded)
+    setImmediate(async () => {
+      try {
+        const patientResult = await db.query(
+          "SELECT bed FROM patients WHERE id = $1",
+          [voidedHandover.patient_id],
+        );
+        if (patientResult.rows.length > 0) {
+          const bed = patientResult.rows[0].bed;
+          await generateAndCacheAISummary(bed);
+          console.log(`AI summary regenerated after void for bed ${bed}`);
+        }
+      } catch (err) {
+        console.error("Failed to regenerate AI summary after void:", err);
+      }
+    });
   } catch (err) {
     next(err);
   }
@@ -110,4 +175,5 @@ module.exports = {
   getHandoversByBed,
   postHandover,
   patchHandover,
+  voidHandover,
 };
