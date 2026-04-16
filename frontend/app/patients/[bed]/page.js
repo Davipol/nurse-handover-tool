@@ -278,15 +278,30 @@ const PatientPage = () => {
               {handovers.map((handover) => (
                 <div
                   key={handover.id}
-                  className={`p-5 rounded-lg ${urgencyColors[handover.urgency]}`}
+                  className={`p-5 rounded-lg ${
+                    handover.is_voided
+                      ? "bg-gray-200 border-gray-400 border-l-4"
+                      : urgencyColors[handover.urgency]
+                  }`}
                 >
                   <div className="flex justify-between items-start mb-3">
                     <div>
-                      <span
-                        className={`px-3 py-1 rounded-full text-xs font-bold uppercase ${urgencyBadgeColors[handover.urgency]}`}
-                      >
-                        {handover.urgency}
-                      </span>
+                      <div className="flex items-center gap-2">
+                        <span
+                          className={`px-3 py-1 rounded-full text-xs font-bold uppercase ${
+                            handover.is_voided
+                              ? "bg-gray-300 text-gray-600"
+                              : urgencyBadgeColors[handover.urgency]
+                          }`}
+                        >
+                          {handover.urgency}
+                        </span>
+                        {handover.is_voided && (
+                          <span className="px-3 py-1 rounded-full text-xs font-bold uppercase bg-red-200 text-red-700">
+                            VOIDED
+                          </span>
+                        )}
+                      </div>
                       <p className="text-sm text-gray-700 mt-2">
                         📅{" "}
                         {new Date(handover.handover_date).toLocaleDateString(
@@ -302,6 +317,12 @@ const PatientPage = () => {
                           Nurse: {handover.nurse_name}
                         </span>
                       </p>
+                      {handover.is_voided && (
+                        <p className="text-xs text-red-600 mt-1">
+                          Voided by nurse #{handover.voided_by} — "
+                          {handover.void_reason}"
+                        </p>
+                      )}
                     </div>
 
                     {handover.vitals && (
@@ -327,7 +348,13 @@ const PatientPage = () => {
                   </div>
 
                   <div className="mt-3 text-gray-800">
-                    <p>{handover.content}</p>
+                    <p
+                      className={
+                        handover.is_voided ? "line-through text-gray-500" : ""
+                      }
+                    >
+                      {handover.content}
+                    </p>
                   </div>
                 </div>
               ))}
