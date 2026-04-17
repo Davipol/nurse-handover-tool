@@ -21,6 +21,11 @@ const PatientPage = () => {
   const [aiSummary, setAiSummary] = useState(null);
   const [loading, setLoading] = useState(true);
   const [summaryUpdating, setSummaryUpdating] = useState(false);
+  const [activeModal, setActiveModal] = useState(null); // 'urgency' | 'void' | null
+  const [selectedHandover, setSelectedHandover] = useState(null);
+  const [newUrgency, setNewUrgency] = useState("");
+  const [voidReason, setVoidReason] = useState("");
+  const [modalLoading, setModalLoading] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -133,6 +138,62 @@ const PatientPage = () => {
     critical: "bg-red-200 text-red-800",
     urgent: "bg-yellow-200 text-yellow-800",
     routine: "bg-green-200 text-green-800",
+  };
+
+  const handleUrgencyUpdate = async () => {
+    if (!newUrgency) return;
+    setModalLoading(true);
+    try {
+      const res = await fetch(
+        `http://localhost:9090/api/handovers/${selectedHandover.id}/urgency`,
+        {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ urgency: newUrgency }),
+        },
+      );
+      const data = await res.json();
+      setHandovers((prev) =>
+        prev.map((h) =>
+          h.id === selectedHandover.id
+            ? { ...h, urgency: data.handover.urgency }
+            : h,
+        ),
+      );
+      setActiveModal(null);
+      setSelectedHandover(null);
+      setNewUrgency("");
+    } catch (err) {
+      console.error("Failed to update urgency:", err);
+    }
+    setModalLoading(false);
+  };
+
+  const handleVoid = async () => {
+    if (!voidReason.trim()) return;
+    setModalLoading(true);
+    try {
+      const res = await fetch(
+        `http://localhost:9090/api/handovers/${selectedHandover.id}/void`,
+        {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ voided_by: 1, void_reason: voidReason }),
+        },
+      );
+      const data = await res.json();
+      setHandovers((prev) =>
+        prev.map((h) =>
+          h.id === selectedHandover.id ? { ...h, ...data.handover } : h,
+        ),
+      );
+      setActiveModal(null);
+      setSelectedHandover(null);
+      setVoidReason("");
+    } catch (err) {
+      console.error("Failed to void handover:", err);
+    }
+    setModalLoading(false);
   };
 
   return (
@@ -356,13 +417,128 @@ const PatientPage = () => {
                       {handover.content}
                     </p>
                   </div>
+                  {!handover.is_voided && (
+                    <div className="mt-4 flex gap-2 justify-end">
+                      <button
+                        onClick={() => {
+                          setSelectedHandover(handover);
+                          setNewUrgency(handover.urgency);
+                          setActiveModal("urgency");
+                        }}
+                        className="px-3 py-1 text-xs font-medium bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition"
+                      >
+                        Change Urgency
+                      </button>
+                      <button
+                        onClick={() => {
+                          setSelectedHandover(handover);
+                          setActiveModal("void");
+                        }}
+                        className="px-3 py-1 text-xs font-medium bg-white border border-red-300 text-red-600 rounded-lg hover:bg-red-50 transition"
+                      >
+                        Void Handover
+                      </button>
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
           )}
         </div>
       </div>
+      {/* Urgency Modal */}
+      {activeModal === "urgency" && selectedHandover && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center">
+          <div
+            className="absolute inset-0"
+            style={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}
+            onClick={() => setActiveModal(null)}
+          />
+          <div className="relative bg-white rounded-lg p-6 z-10 w-96 shadow-xl">
+            <h3 className="text-lg font-bold text-gray-900 mb-4">
+              Change Urgency
+            </h3>
+            <p className="text-sm text-gray-600 mb-4">
+              Handover from{" "}
+              {new Date(selectedHandover.handover_date).toLocaleDateString(
+                "en-GB",
+              )}{" "}
+              — {selectedHandover.shift} shift
+            </p>
+            <select
+              value={newUrgency}
+              onChange={(e) => setNewUrgency(e.target.value)}
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 mb-4 text-gray-900"
+            >
+              <option value="routine">Routine</option>
+              <option value="urgent">Urgent</option>
+              <option value="critical">Critical</option>
+            </select>
+            <div className="flex gap-3 justify-end">
+              <button
+                onClick={() => setActiveModal(null)}
+                className="px-4 py-2 text-sm text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleUrgencyUpdate}
+                disabled={modalLoading}
+                className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 disabled:opacity-50"
+              >
+                {modalLoading ? "Saving..." : "Confirm"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
+      {/* Void Modal */}
+      {activeModal === "void" && selectedHandover && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center">
+          <div
+            className="absolute inset-0"
+            style={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}
+            onClick={() => setActiveModal(null)}
+          />
+          <div className="relative bg-white rounded-lg p-6 z-10 w-96 shadow-xl">
+            <h3 className="text-lg font-bold text-gray-900 mb-2">
+              Void Handover
+            </h3>
+            <p className="text-sm text-gray-600 mb-4">
+              Handover from{" "}
+              {new Date(selectedHandover.handover_date).toLocaleDateString(
+                "en-GB",
+              )}{" "}
+              — {selectedHandover.shift} shift
+            </p>
+            <p className="text-sm text-gray-700 mb-2 font-medium">
+              Reason for voiding:
+            </p>
+            <textarea
+              value={voidReason}
+              onChange={(e) => setVoidReason(e.target.value)}
+              placeholder="e.g. Duplicate entry, wrong patient..."
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 mb-4 text-gray-900 h-24 resize-none"
+            />
+            <div className="flex gap-3 justify-end">
+              <button
+                onClick={() => setActiveModal(null)}
+                className="px-4 py-2 text-sm text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleVoid}
+                disabled={modalLoading || !voidReason.trim()}
+                className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 disabled:opacity-50"
+              >
+                {modalLoading ? "Voiding..." : "Void Handover"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       {/* Floating Action Button with Menu */}
       <div className="fixed bottom-8 right-8 z-50">
         {showMenu && (
