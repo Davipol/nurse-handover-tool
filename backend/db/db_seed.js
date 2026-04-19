@@ -62,10 +62,13 @@ const seed = async () => {
   
   -- Additional Pediatrics patients
   ('Emma', 'Martin', '2018-03-10', 'P-2', '["Bronchiolitis"]', 'admitted', 5),
-  ('Noah', 'Thompson', '2015-09-22', 'P-3', '["Febrile Seizure"]', 'admitted', 5)
+  ('Noah', 'Thompson', '2015-09-22', 'P-3', '["Febrile Seizure"]', 'admitted', 5),
+  --Additional Orthopedics patients
+  ('Thomas', 'Hughes', '1970-05-14', 'O-1', '["Hip Fracture", "Osteoporosis"]', 'admitted', 6),
+('Margaret', 'Clarke', '1958-09-30', 'O-2', '["Post-operative Knee Replacement"]', 'admitted', 6)
       RETURNING id
     `);
-    console.log("Inserted 16 patients");
+    console.log("Inserted 18 patients");
 
     // Insert Handover Notes
     await db.query(`
@@ -180,9 +183,15 @@ const seed = async () => {
  'Infant with bronchiolitis. Increased work of breathing with nasal flaring and subcostal recession. On 1L O2. Tolerating small frequent feeds. NG tube in situ. Suction PRN. Mother at bedside. Pediatric team monitoring - threshold for escalation if oxygen requirements increase.'), 
   (6, 16, '2026-02-03', 'night', 'routine',
  '{"bloodPressure": "95/60", "pulse": 110, "temperature": 37.2, "respiratoryRate": 22, "oxygenSaturation": 98}',
- 'Admitted following febrile seizure at home. Temperature settled with paracetamol. No further seizure activity. Child alert and playing. Viral illness suspected. Observations stable. Plan for discharge tomorrow if remains well. Parents reassured.')  
- `);
-    console.log("Inserted 28 handover notes");
+ 'Admitted following febrile seizure at home. Temperature settled with paracetamol. No further seizure activity. Child alert and playing. Viral illness suspected. Observations stable. Plan for discharge tomorrow if remains well. Parents reassured.'),
+ (4, 17, '2026-02-03', 'day', 'urgent',
+'{"bloodPressure": "138/85", "pulse": 88, "temperature": 37.1, "respiratoryRate": 18, "oxygenSaturation": 96}',
+'Patient admitted following fall at home. Right neck of femur fracture confirmed on X-ray. Orthopaedic team reviewed - surgical fixation planned for tomorrow. Pain managed with morphine PCA. NBM from midnight. DVT prophylaxis commenced. Family informed and present.'),
+
+(4, 18, '2026-02-03', 'night', 'routine',
+'{"bloodPressure": "122/76", "pulse": 72, "temperature": 36.8, "respiratoryRate": 14, "oxygenSaturation": 98}',
+'Post-op day 2 following total knee replacement. Pain well controlled with oral analgesia. Wound site clean and dry. Physiotherapy commenced - patient mobilising with frame. DVT prophylaxis ongoing. Tolerating diet well. Discharge planning initiated.')`);
+    console.log("Inserted 30 handover notes");
 
     console.log("Database seeded successfully!");
     process.exit(0);
