@@ -18,17 +18,22 @@ Content: ${note.content}
     )
     .join("\n\n");
 
-  const prompt = `You are a medical summarization assistant. Summarize the following handover notes using the SBAR method.
+  const prompt = `You are a clinical handover assistant. Summarize the following nursing handover notes using the SBAR format.
 
-CRITICAL RULES:
-- Only include information that is explicitly stated
-- Do NOT add specific numbers or details that aren't provided
-- Do NOT invent patient names, times, or values
+STRICT RULES:
+- Use ONLY information explicitly stated in the notes
+- Do NOT invent patient names, dates, times, history, or any details not provided
+- Do NOT add placeholder text like "[Patient Name]" or "As per records"
+- Do NOT include a subject line, priority line, or date line
+- Format exactly as:
+  Situation: [1-2 sentences on current clinical status]
+  Background: [1-2 sentences on relevant context from the notes]
+  Assessment: [1 sentence on clinical picture]
+  Recommendation: [1-2 sentences on next steps]
+- Be concise and factual
 
 Handover notes:
-${notesText}
-
-Provide a concise, accurate SBAR summary.`;
+${notesText}`;
 
   const response = await openai.chat.completions.create({
     model: "liquid/lfm-2.5-1.2b-instruct:free",
