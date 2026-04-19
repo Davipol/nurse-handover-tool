@@ -32,7 +32,7 @@ const PatientPage = () => {
       try {
         // Fetch patient and handovers by bed
         const handoversRes = await fetch(
-          `http://localhost:9090/api/patients/${bed}/handovers`,
+          `${process.env.NEXT_PUBLIC_API_URL}/api/patients/${bed}/handovers`,
         );
         const handoversData = await handoversRes.json();
 
@@ -42,7 +42,7 @@ const PatientPage = () => {
         // Fetch AI summary if there are handovers
         if (handoversData.handovers && handoversData.handovers.length > 0) {
           const summaryRes = await fetch(
-            `http://localhost:9090/api/patients/${bed}/summary`,
+            `${process.env.NEXT_PUBLIC_API_URL}/api/patients/${bed}/summary`,
           );
           const summaryData = await summaryRes.json();
           setAiSummary(summaryData);
@@ -65,7 +65,7 @@ const PatientPage = () => {
       const interval = setInterval(async () => {
         try {
           const summaryRes = await fetch(
-            `http://localhost:9090/api/patients/${bed}/summary`,
+            `${process.env.NEXT_PUBLIC_API_URL}/api/patients/${bed}/summary`,
           );
           const summaryData = await summaryRes.json();
 
@@ -145,7 +145,7 @@ const PatientPage = () => {
     setModalLoading(true);
     try {
       const res = await fetch(
-        `http://localhost:9090/api/handovers/${selectedHandover.id}/urgency`,
+        `${process.env.NEXT_PUBLIC_API_URL}/api/handovers/${selectedHandover.id}/urgency`,
         {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
@@ -174,7 +174,7 @@ const PatientPage = () => {
     setModalLoading(true);
     try {
       const res = await fetch(
-        `http://localhost:9090/api/handovers/${selectedHandover.id}/void`,
+        `${process.env.NEXT_PUBLIC_API_URL}/api/handovers/${selectedHandover.id}/void`,
         {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },

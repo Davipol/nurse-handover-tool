@@ -11,7 +11,7 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchUnits = async () => {
       try {
-        const unitsRes = await fetch("http://localhost:9090/api/units");
+        const unitsRes = await fetch("${process.env.NEXT_PUBLIC_API_URL}/api/units");
         const unitData = await unitsRes.json();
         console.log("Units Data", unitData);
         setUnits(unitData.units);

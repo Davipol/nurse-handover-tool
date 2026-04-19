@@ -19,18 +19,18 @@ export default function UnitPage() {
     const fetchData = async () => {
       try {
         // Fetch unit details
-        const unitRes = await fetch(`http://localhost:9090/api/units`);
+        const unitRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/units`);
         const unitData = await unitRes.json();
         const foundUnit = unitData.units.find((u) => u.id === Number(id));
         setUnit(foundUnit);
 
         // Fetch patients in this unit
         const patientsRes = await fetch(
-          `http://localhost:9090/api/patients?unit=${id}`,
+          `${process.env.NEXT_PUBLIC_API_URL}/api/patients?unit=${id}`,
         );
         const patientsData = await patientsRes.json();
         // Fetch all handovers to get urgency
-        const handoversRes = await fetch(`http://localhost:9090/api/handovers`);
+        const handoversRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/handovers`);
         const handoversData = await handoversRes.json();
 
         // Add urgency from latest handover to each patient

@@ -31,13 +31,13 @@ export default function NewVitalsPage() {
       try {
         // Fetch patient by bed
         const patientRes = await fetch(
-          `http://localhost:9090/api/patients/${bed}/handovers`,
+          `${process.env.NEXT_PUBLIC_API_URL}/api/patients/${bed}/handovers`,
         );
         const patientData = await patientRes.json();
         setPatient(patientData.patient);
 
         // Fetch nurses
-        const nursesRes = await fetch("http://localhost:9090/api/nurses");
+        const nursesRes = await fetch("${process.env.NEXT_PUBLIC_API_URL}/api/nurses");
         const nursesData = await nursesRes.json();
         setNurses(nursesData.nurses);
         const now = new Date();
@@ -79,7 +79,7 @@ export default function NewVitalsPage() {
         content: "Routine vitals measurement",
       };
 
-      const response = await fetch("http://localhost:9090/api/handovers", {
+      const response = await fetch("${process.env.NEXT_PUBLIC_API_URL}/api/handovers", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
