@@ -1,11 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 
-export default function NewVitalsPage() {
+function NewVitalsPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const bed = searchParams.get("bed");
@@ -37,7 +37,7 @@ export default function NewVitalsPage() {
         setPatient(patientData.patient);
 
         // Fetch nurses
-        const nursesRes = await fetch("${process.env.NEXT_PUBLIC_API_URL}/api/nurses");
+        const nursesRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/nurses`);
         const nursesData = await nursesRes.json();
         setNurses(nursesData.nurses);
         const now = new Date();
@@ -79,7 +79,7 @@ export default function NewVitalsPage() {
         content: "Routine vitals measurement",
       };
 
-      const response = await fetch("${process.env.NEXT_PUBLIC_API_URL}/api/handovers", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/handovers`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -355,5 +355,13 @@ export default function NewVitalsPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function Page() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="text-xl">Loading...</div></div>}>
+      <NewVitalsPage />
+    </Suspense>
   );
 }
