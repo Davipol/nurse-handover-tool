@@ -39,6 +39,7 @@ Provide a concise, accurate SBAR summary.`;
   );
 
   const data = await response.json();
+  console.log("OpenRouter response:", JSON.stringify(data));
   return data.choices[0].message.content;
 };
 
