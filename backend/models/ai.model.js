@@ -1,3 +1,10 @@
+const OpenAI = require("openai");
+
+const openai = new OpenAI({
+  baseURL: "https://openrouter.ai/api/v1",
+  apiKey: process.env.LIQUID_API_KEY,
+});
+
 const summarizeHandovers = async (handoverNotes) => {
   const notesText = handoverNotes
     .filter((note) => !note.is_voided)
@@ -23,24 +30,12 @@ ${notesText}
 
 Provide a concise, accurate SBAR summary.`;
 
-  const response = await fetch(
-    "https://openrouter.ai/api/v1/chat/completions",
-    {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        model: "liquid/lfm-2.5-1.2b-instruct:free",
-        messages: [{ role: "user", content: prompt }],
-      }),
-    },
-  );
+  const response = await openai.chat.completions.create({
+    model: "liquid/lfm-2.5-1.2b-instruct:free",
+    messages: [{ role: "user", content: prompt }],
+  });
 
-  const data = await response.json();
-  console.log("OpenRouter response:", JSON.stringify(data));
-  return data.choices[0].message.content;
+  return response.choices[0].message.content;
 };
 
 const summarizeSingleHandover = async (handoverNote) => {
@@ -116,23 +111,12 @@ ${formatGroup(routine)}
 
 Summarize each category briefly, maintaining the same structure.`;
 
-  const response = await fetch(
-    "https://openrouter.ai/api/v1/chat/completions",
-    {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${process.env.LIQUID_API_KEY}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        model: "liquid/lfm-2.5-1.2b-instruct:free",
-        messages: [{ role: "user", content: prompt }],
-      }),
-    },
-  );
+  const response = await openai.chat.completions.create({
+    model: "liquid/lfm-2.5-1.2b-instruct:free",
+    messages: [{ role: "user", content: prompt }],
+  });
 
-  const data = await response.json();
-  return data.choices[0].message.content;
+  return response.choices[0].message.content;
 };
 
 module.exports = {
