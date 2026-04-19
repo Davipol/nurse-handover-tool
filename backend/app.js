@@ -4,7 +4,10 @@ const app = express();
 
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: [
+      "http://localhost:3000",
+      "https://nurse-handover-tool-nli6.vercel.app",
+    ],
   }),
 );
 app.use(express.json());
