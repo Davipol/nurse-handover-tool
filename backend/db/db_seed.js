@@ -1,4 +1,5 @@
 const db = require("./connection.js");
+const bcrypt = require("bcrypt");
 
 const seed = async () => {
   try {
@@ -22,17 +23,47 @@ const seed = async () => {
     `);
     console.log("Inserted 6 units");
 
+    // Generate hash for passwords
+    const passwordHash = await bcrypt.hash("demo123", 10);
     // Insert Nurses
-    const nursesResult = await db.query(`
-      INSERT INTO nurses (name, email, unit_id) VALUES 
-      ('Sarah Johnson', 'sarah.johnson@hospital.com', 1),
-      ('Michael Chen', 'michael.chen@hospital.com', 2),
-      ('Emily Rodriguez', 'emily.rodriguez@hospital.com', 3),
-      ('David Kim', 'david.kim@hospital.com', 1),
-      ('Jessica Williams', 'jessica.williams@hospital.com', 4),
-      ('Ahmed Hassan', 'ahmed.hassan@hospital.com', 5)
-      RETURNING id
-    `);
+
+    const nursesResult = await db.query(
+      `
+      INSERT INTO nurses (name, email, unit_id, password_hash) VALUES
+    ($1, $2, $3, $4),
+  ($5, $6, $7, $8),
+  ($9, $10, $11, $12),
+  ($13, $14, $15, $16),
+  ($17, $18, $19, $20),
+  ($21, $22, $23, $24)
+RETURNING id`,
+      [
+        "Sarah Johnson",
+        "sarah.johnson@hospital.com",
+        1,
+        passwordHash,
+        "Michael Chen",
+        "michael.chen@hospital.com",
+        2,
+        passwordHash,
+        "Emily Rodriguez",
+        "emily.rodriguez@hospital.com",
+        3,
+        passwordHash,
+        "David Kim",
+        "david.kim@hospital.com",
+        1,
+        passwordHash,
+        "Jessica Williams",
+        "jessica.williams@hospital.com",
+        4,
+        passwordHash,
+        "Ahmed Hassan",
+        "ahmed.hassan@hospital.com",
+        5,
+        passwordHash,
+      ],
+    );
     console.log("Inserted 6 nurses");
 
     // Insert Patients

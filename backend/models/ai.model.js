@@ -64,23 +64,12 @@ Content: ${handoverNote.content}
 
 Provide a concise SBAR summary (max 4-5 sentences).`;
 
-  const response = await fetch(
-    "https://openrouter.ai/api/v1/chat/completions",
-    {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        model: "liquid/lfm-2.5-1.2b-instruct:free",
-        messages: [{ role: "user", content: prompt }],
-      }),
-    },
-  );
+  const response = await openai.chat.completions.create({
+    model: "liquid/lfm-2.5-1.2b-instruct:free",
+    messages: [{ role: "user", content: prompt }],
+  });
 
-  const data = await response.json();
-  return data.choices[0].message.content;
+  return response.choices[0].message.content;
 };
 
 const summarizeUnitDay = async (unitName, handovers, date) => {
