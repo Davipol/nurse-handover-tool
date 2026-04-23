@@ -1,4 +1,5 @@
 "use client";
+import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
@@ -26,6 +27,9 @@ const PatientPage = () => {
   const [newUrgency, setNewUrgency] = useState("");
   const [voidReason, setVoidReason] = useState("");
   const [modalLoading, setModalLoading] = useState(false);
+
+  // Get session
+  const { data: session } = useSession();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -178,7 +182,10 @@ const PatientPage = () => {
         {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ voided_by: 1, void_reason: voidReason }),
+          body: JSON.stringify({
+            voided_by: session.user.id,
+            void_reason: voidReason,
+          }),
         },
       );
       const data = await res.json();
@@ -380,7 +387,7 @@ const PatientPage = () => {
                       </p>
                       {handover.is_voided && (
                         <p className="text-xs text-red-600 mt-1">
-                          Voided by nurse #{handover.voided_by} — "
+                          Voided by {handover.voided_by_name} - "
                           {handover.void_reason}"
                         </p>
                       )}
