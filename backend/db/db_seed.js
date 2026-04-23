@@ -24,7 +24,7 @@ const seed = async () => {
     console.log("Inserted 6 units");
 
     // Generate hash for passwords
-    const passwordHash = await bcrypt.hash("demo123", 10);
+    const passwordHash = await bcrypt.hash("Handover2026!", 10);
     // Insert Nurses
 
     const nursesResult = await db.query(
