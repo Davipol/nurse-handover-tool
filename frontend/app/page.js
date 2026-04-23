@@ -11,7 +11,9 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchUnits = async () => {
       try {
-        const unitsRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/units`);
+        const unitsRes = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/units`,
+        );
         const unitData = await unitsRes.json();
         console.log("Units Data", unitData);
         setUnits(unitData.units);
@@ -44,8 +46,8 @@ const Dashboard = () => {
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
       <div className="bg-white border-b border-gray-200 px-4 sm:px-6 py-3">
-        <h1 className="text-xl font-semibold text-gray-900">
-          Nurse Handover Tool
+        <h1 className="text-2xl font-semibold text-gray-900">
+          Handover<span className="text-blue-500"> AI</span>
         </h1>
       </div>
 

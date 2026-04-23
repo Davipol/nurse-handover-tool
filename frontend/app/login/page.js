@@ -35,12 +35,12 @@ export default function LoginPage() {
     <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center px-4">
       <div className="w-full max-w-md">
         {/* Logo */}
-        <div className="flex justify-center mb-8">
+        <div className="flex justify-center mb-2">
           <Image
             src="/handover-ai.png"
             alt="Handover AI Logo"
-            width={180}
-            height={180}
+            width={320}
+            height={320}
             priority
           />
         </div>
