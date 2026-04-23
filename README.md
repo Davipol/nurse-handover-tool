@@ -50,18 +50,21 @@ npm run dev
 
 Backend `.env.development`:
 
+```bash
 PGDATABASE=handover_tool_db
 PGUSER=your_user
 PGPASSWORD=your_password
 PGHOST=localhost
 PGPORT=5432
 LIQUID_API_KEY=your_openrouter_key
+```
 
 Frontend `.env.local`:
-
+```bash
 NEXT_PUBLIC_API_URL=http://localhost:9090
 NEXTAUTH_SECRET=your_secret
 NEXTAUTH_URL=http://localhost:3000
+```
 
 ## Database Setup
 
