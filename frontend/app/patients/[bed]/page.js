@@ -12,6 +12,7 @@ import {
   Activity,
 } from "lucide-react";
 import LoadingSpinner from "@/app/components/LoadingSpinner";
+import UserMenu from "@/app/components/UserMenu";
 
 const PatientPage = () => {
   const params = useParams();
@@ -201,7 +202,7 @@ const PatientPage = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header with back button */}
-      <div className="bg-white border-b border-gray-200 px-4 sm:px-6 py-3">
+      <div className="bg-white border-b border-gray-200 px-4 sm:px-6 py-3 flex items-center justify-between">
         <Link
           href={`/units/${patient.unit_id}`}
           className="inline-flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900"
@@ -209,6 +210,7 @@ const PatientPage = () => {
           <ArrowLeft className="w-4 h-4" />
           Back to Unit
         </Link>
+        <UserMenu />
       </div>
 
       {/* Main Content */}

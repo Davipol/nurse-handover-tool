@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import LoadingSpinner from "./components/LoadingSpinner";
+import UserMenu from "./components/UserMenu";
 
 const Dashboard = () => {
   const [units, setUnits] = useState([]);
@@ -40,10 +41,11 @@ const Dashboard = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <div className="bg-white border-b border-gray-200 px-4 sm:px-6 py-3">
+      <div className="bg-white border-b border-gray-200 px-4 sm:px-6 py-3 flex items-center justify-between">
         <h1 className="text-2xl font-semibold text-gray-900">
           Handover<span className="text-blue-500"> AI</span>
         </h1>
+        <UserMenu />
       </div>
 
       {/* Main Content */}
