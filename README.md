@@ -6,7 +6,8 @@ A full-stack clinical handover tool for hospital nurses. Nurses can view patient
 
 - Browse patients by hospital unit
 - View full handover history per patient
-- Write new handover notes with vitals
+- Write new handover notes with vitals and urgency level
+- Record vitals separately as a quick entry without a full handover note
 - AI-generated SBAR summaries (updated automatically on new handovers)
 - Change handover urgency level
 - Void handovers with reason and audit trail

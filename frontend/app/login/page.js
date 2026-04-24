@@ -32,15 +32,15 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center px-4">
+    <div className="min-h-screen bg-gray-50 flex flex-col items-center pt-12 px-4">
       <div className="w-full max-w-md">
         {/* Logo */}
-        <div className="flex justify-center mb-2">
+        <div className="flex justify-center">
           <Image
             src="/handover-ai.png"
             alt="Handover AI Logo"
-            width={320}
-            height={320}
+            width={250}
+            height={250}
             priority
           />
         </div>
@@ -50,13 +50,9 @@ export default function LoginPage() {
           <h1 className="text-2xl font-bold text-gray-900 mb-1 text-center">
             Sign in
           </h1>
-          <p className="text-sm text-center text-gray-500 mb-6">
-            Nurse Handover Tool
-          </p>
-
           {/* Demo note */}
           <div className="bg-blue-50 border border-blue-200 rounded-lg px-4 py-3 mb-6 text-sm text-blue-700 text-center">
-            Demo credentials pre-filled — click <strong>Sign In</strong> to
+            Demo credentials pre-filled - click <strong>Sign In</strong> to
             explore
           </div>
 
