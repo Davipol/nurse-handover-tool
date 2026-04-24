@@ -11,6 +11,7 @@ import {
   Plus,
   Activity,
 } from "lucide-react";
+import LoadingSpinner from "@/app/components/LoadingSpinner";
 
 const PatientPage = () => {
   const params = useParams();
@@ -93,13 +94,7 @@ const PatientPage = () => {
     fetchData();
   }, [bed]);
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-xl">Loading...</div>
-      </div>
-    );
-  }
+  if (loading) return <LoadingSpinner />;
 
   if (!patient) {
     return (

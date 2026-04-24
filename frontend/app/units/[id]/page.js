@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import LoadingSpinner from "@/app/components/LoadingSpinner";
 
 export default function UnitPage() {
   const params = useParams();
@@ -62,13 +63,7 @@ export default function UnitPage() {
     fetchData();
   }, [id]);
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-xl">Loading...</div>
-      </div>
-    );
-  }
+  if (loading) return <LoadingSpinner />;
 
   if (!unit) {
     return (

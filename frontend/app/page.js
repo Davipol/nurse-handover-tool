@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import LoadingSpinner from "./components/LoadingSpinner";
 
 const Dashboard = () => {
   const [units, setUnits] = useState([]);
@@ -34,13 +35,7 @@ const Dashboard = () => {
         {error}
       </div>
     );
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-xl">Loading...</div>
-      </div>
-    );
-  }
+  if (loading) return <LoadingSpinner />;
 
   return (
     <div className="min-h-screen bg-gray-50">
