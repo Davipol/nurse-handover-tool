@@ -92,3 +92,72 @@ describe("POST /api/nurses/login", () => {
     expect(body.msg).toBe("Email and password are required");
   });
 });
+
+describe("GET /api/handovers", () => {
+  test("200: returns all handovers when no filter is present", async () => {
+    const { body } = await request(app).get("/api/handovers").expect(200);
+    expect(body.handovers).toHaveLength(5);
+    body.handovers.forEach((handover) => {
+      expect(handover).toMatchObject({
+        id: expect.any(Number),
+        nurse_id: expect.any(Number),
+        patient_id: expect.any(Number),
+        handover_date: expect.any(String),
+        shift: expect.any(String),
+        urgency: expect.any(String),
+        vitals: expect.any(Object),
+        content: expect.any(String),
+      });
+      expect(handover.vitals).toMatchObject({
+        bloodPressure: expect.any(String),
+        pulse: expect.any(Number),
+        temperature: expect.any(Number),
+        respiratoryRate: expect.any(Number),
+        oxygenSaturation: expect.any(Number),
+      });
+    });
+  });
+  test("200: returns all handovers with the same urgency when urgency filter is present", async () => {
+    const { body } = await request(app)
+      .get("/api/handovers?urgency=urgent")
+      .expect(200);
+    expect(body.handovers).toHaveLength(3);
+    body.handovers.forEach((handover) => {
+      expect(handover.urgency).toBe("urgent");
+    });
+  });
+  test("200: returns all handovers with the same date when date filter is present", async () => {
+    const { body } = await request(app)
+      .get("/api/handovers?date=2026-02-02")
+      .expect(200);
+    expect(body.handovers).toHaveLength(3);
+    body.handovers.forEach((handover) => {
+      expect(handover.handover_date).toBe("2026-02-02T00:00:00.000Z");
+    });
+  });
+  test("200: returns all handovers with the same shift when shift filter is present", async () => {
+    const { body } = await request(app)
+      .get("/api/handovers?shift=day")
+      .expect(200);
+    expect(body.handovers).toHaveLength(3);
+    body.handovers.forEach((handover) => {
+      expect(handover.shift).toBe("day");
+    });
+  });
+  test("200: returns all correct handovers when two filters are present", async () => {
+    const { body } = await request(app)
+      .get("/api/handovers?urgency=urgent&shift=night")
+      .expect(200);
+    expect(body.handovers).toHaveLength(2);
+    body.handovers.forEach((handover) => {
+      expect(handover.shift).toBe("night");
+      expect(handover.urgency).toBe("urgent");
+    });
+  });
+  test("200: returns all correct handovers sorted in descending order when filter applied", async () => {
+    const { body } = await request(app)
+      .get("/api/handovers?urgency=urgent")
+      .expect(200);
+    expect(body.handovers).toBeSortedBy("handover_date", { descending: true });
+  });
+});
