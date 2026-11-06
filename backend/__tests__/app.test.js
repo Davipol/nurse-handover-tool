@@ -161,3 +161,64 @@ describe("GET /api/handovers", () => {
     expect(body.handovers).toBeSortedBy("handover_date", { descending: true });
   });
 });
+
+describe("POST /api/handovers", () => {
+  const handover = {
+    nurse_id: 1,
+    patient_id: 4,
+    handover_date: "2026-02-04",
+    shift: "day",
+    urgency: "routine",
+    vitals: {
+      bloodPressure: "120/80",
+      pulse: 70,
+      temperature: 36.5,
+      respiratoryRate: 14,
+      oxygenSaturation: 99,
+    },
+    content: "New note",
+  };
+  test("201: creates the note and returns it with an id", async () => {
+    const { body } = await request(app)
+      .post("/api/handovers")
+      .send(handover)
+      .expect(201);
+    expect(body.handover).toMatchObject({
+      ...handover,
+      id: 6,
+      handover_date: "2026-02-04T00:00:00.000Z",
+    });
+  });
+  test("201: the new handover is saved in the database", async () => {
+    await request(app).post("/api/handovers").send(handover).expect(201);
+
+    const { body } = await request(app).get("/api/handovers").expect(200);
+    expect(body.handovers).toHaveLength(6);
+    expect(body.handovers).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ content: "New note", patient_id: 4 }),
+      ]),
+    );
+  });
+  test("400: returns the correct message if one of the required fields is missing", async () => {
+    const { body } = await request(app)
+      .post("/api/handovers")
+      .send({ ...handover, shift: "" })
+      .expect(400);
+    expect(body.msg).toBe("Missing required fields");
+  });
+  test("400: returns the correct message if one of the required enums fields is incorrect", async () => {
+    const { body } = await request(app)
+      .post("/api/handovers")
+      .send({ ...handover, urgency: "wrongUrgency" })
+      .expect(400);
+    expect(body.msg).toBe("Bad request");
+  });
+  test("404: returns the correct message if one of the required fields is not found", async () => {
+    const { body } = await request(app)
+      .post("/api/handovers")
+      .send({ ...handover, nurse_id: 999 })
+      .expect(404);
+    expect(body.msg).toBe("Not found");
+  });
+});
