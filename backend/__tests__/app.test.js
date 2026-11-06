@@ -252,4 +252,18 @@ describe("PATCH /api/handovers", () => {
       .expect(404);
     expect(body.msg).toBe("Handover not found or already voided");
   });
+  test("400: returns the correct error message if id is not a number", async () => {
+    const { body } = await request(app)
+      .patch("/api/handovers/abc/urgency")
+      .send({ urgency: "critical" })
+      .expect(400);
+    expect(body.msg).toBe("Bad request");
+  });
+  test("400: returns the correct error message if urgency is a wrong value", async () => {
+    const { body } = await request(app)
+      .patch("/api/handovers/1/urgency")
+      .send({ urgency: "wrong" })
+      .expect(400);
+    expect(body.msg).toBe("Bad request");
+  });
 });
