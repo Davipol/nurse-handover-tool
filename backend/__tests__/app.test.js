@@ -222,3 +222,34 @@ describe("POST /api/handovers", () => {
     expect(body.msg).toBe("Not found");
   });
 });
+describe("PATCH /api/handovers", () => {
+  test("200: updates the urgency and returns the note with the new value", async () => {
+    const { body } = await request(app)
+      .patch("/api/handovers/1/urgency")
+      .send({ urgency: "critical" })
+      .expect(200);
+    expect(body.handover.urgency).toBe("critical");
+    expect(body.handover.id).toBe(1);
+  });
+  test("400: returns the correct error message if no urgency is present", async () => {
+    const { body } = await request(app)
+      .patch("/api/handovers/1/urgency")
+      .send({})
+      .expect(400);
+    expect(body.msg).toBe("Only urgency can be updated");
+  });
+  test("404: returns the correct error message if an unknown handover id is specified", async () => {
+    const { body } = await request(app)
+      .patch("/api/handovers/999/urgency")
+      .send({ urgency: "critical" })
+      .expect(404);
+    expect(body.msg).toBe("Handover not found or already voided");
+  });
+  test("404: returns the correct error message if handover id was already voided", async () => {
+    const { body } = await request(app)
+      .patch("/api/handovers/4/urgency")
+      .send({ urgency: "critical" })
+      .expect(404);
+    expect(body.msg).toBe("Handover not found or already voided");
+  });
+});
