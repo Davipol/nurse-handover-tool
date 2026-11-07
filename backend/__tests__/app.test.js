@@ -351,3 +351,25 @@ describe("GET /api/patients", () => {
     expect(body.patients).toBeSortedBy("bed");
   });
 });
+
+describe("GET /api/patients/:bed", () => {
+  test("200: responds with the correct patient", async () => {
+    const { body } = await request(app).get("/api/patients/C-1").expect(200);
+    expect(body.patient).toMatchObject({
+      id: 1,
+      first_name: "John",
+      last_name: "Smith",
+      date_of_birth: "1965-03-15T00:00:00.000Z",
+      bed: "C-1",
+      conditions: ["Hypertension"],
+      status: "admitted",
+      unit_id: 1,
+      ai_summary: "Cached summary for C-1",
+      ai_summary_count: 2,
+    });
+  });
+  test("404: responds with the correct message if no patient is in specified bed", async () => {
+    const { body } = await request(app).get("/api/patients/R-99").expect(404);
+    expect(body.msg).toBe("No patient found in this bed");
+  });
+});
