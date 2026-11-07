@@ -267,3 +267,45 @@ describe("PATCH /api/handovers", () => {
     expect(body.msg).toBe("Bad request");
   });
 });
+
+describe("PATCH /api/handovers/:id/void", () => {
+  test("200: returns a voided handover with correct fields", async () => {
+    const { body } = await request(app)
+      .patch("/api/handovers/1/void")
+      .send({ voided_by: 1, void_reason: "Test void" })
+      .expect(200);
+    expect(body.handover.id).toBe(1);
+    expect(body.handover.is_voided).toBe(true);
+    expect(body.handover.voided_by).toBe(1);
+    expect(body.handover.void_reason).toBe("Test void");
+    expect(typeof body.handover.voided_at).toBe("string");
+  });
+  test("400: returns the correct error message if no voided reason is present", async () => {
+    const { body } = await request(app)
+      .patch("/api/handovers/1/void")
+      .send({ voided_by: 1 })
+      .expect(400);
+    expect(body.msg).toBe("voided_by and void_reason are required");
+  });
+  test("404: returns the correct error message if handover id is not found", async () => {
+    const { body } = await request(app)
+      .patch("/api/handovers/999/void")
+      .send({ voided_by: 1, void_reason: "Test void" })
+      .expect(404);
+    expect(body.msg).toBe("Handover not found or already voided");
+  });
+  test("404: returns the correct error message if handover was already voided", async () => {
+    const { body } = await request(app)
+      .patch("/api/handovers/4/void")
+      .send({ voided_by: 1, void_reason: "Test void" })
+      .expect(404);
+    expect(body.msg).toBe("Handover not found or already voided");
+  });
+  test("404: returns the correct error message if voided_by nurse does not exist", async () => {
+    const { body } = await request(app)
+      .patch("/api/handovers/1/void")
+      .send({ voided_by: 999, void_reason: "Test void" })
+      .expect(404);
+    expect(body.msg).toBe("Not found");
+  });
+});
