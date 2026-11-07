@@ -74,6 +74,16 @@ const patients = [
     status: "admitted",
     unit_id: 1,
   },
+  // 5: added last but sorts first by bed, so the sort test can fail
+  {
+    first_name: "Thomas",
+    last_name: "Hughes",
+    date_of_birth: "1970-05-14",
+    bed: "C-0",
+    conditions: [],
+    status: "admitted",
+    unit_id: 1,
+  },
 ];
 
 const handoverNotes = [

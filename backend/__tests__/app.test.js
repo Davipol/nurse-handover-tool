@@ -309,3 +309,45 @@ describe("PATCH /api/handovers/:id/void", () => {
     expect(body.msg).toBe("Not found");
   });
 });
+
+describe("GET /api/patients", () => {
+  test("200: responds with an array of all patients with correct fields", async () => {
+    const { body } = await request(app).get("/api/patients").expect(200);
+    expect(body.patients).toHaveLength(5);
+    body.patients.forEach((patient) => {
+      expect(patient).toMatchObject({
+        id: expect.any(Number),
+        first_name: expect.any(String),
+        last_name: expect.any(String),
+        date_of_birth: expect.any(String),
+        bed: expect.any(String),
+        status: expect.any(String),
+        unit_id: expect.any(Number),
+        ai_summary_count: expect.any(Number),
+      });
+      expect(
+        patient.ai_summary === null || typeof patient.ai_summary === "string",
+      ).toBe(true);
+      expect(Array.isArray(patient.conditions)).toBe(true);
+    });
+  });
+  test("200: returns all patients in the same unit when unit filter is present", async () => {
+    const { body } = await request(app).get("/api/patients?unit=1").expect(200);
+    expect(body.patients).toHaveLength(4);
+    body.patients.forEach((patient) => {
+      expect(patient.unit_id).toBe(1);
+    });
+  });
+  test("200: returns the correct patient when bed filter is present", async () => {
+    const { body } = await request(app)
+      .get("/api/patients?bed=C-2")
+      .expect(200);
+    expect(body.patients).toHaveLength(1);
+    expect(Array.isArray(body.patients)).toBe(true);
+    expect(body.patients[0].bed).toBe("C-2");
+  });
+  test("200: filtered patients are sorted by bed", async () => {
+    const { body } = await request(app).get("/api/patients?unit=1").expect(200);
+    expect(body.patients).toBeSortedBy("bed");
+  });
+});
