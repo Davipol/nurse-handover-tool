@@ -373,3 +373,49 @@ describe("GET /api/patients/:bed", () => {
     expect(body.msg).toBe("No patient found in this bed");
   });
 });
+
+describe("GET /api/patients/:bed/handovers", () => {
+  test("200: responds with the correct handovers for the right patient", async () => {
+    const { body } = await request(app)
+      .get("/api/patients/C-1/handovers")
+      .expect(200);
+    expect(body.handover_count).toBe(2);
+    expect(body.handovers.length).toBe(2);
+    expect(body.patient.first_name).toBe("John");
+    expect(body.patient.id).toBe(1);
+    body.handovers.forEach((handover) => {
+      expect(handover.patient_id).toBe(1);
+      expect(typeof handover.nurse_name).toBe("string");
+    });
+  });
+  test("200: responds with the handovers sorted by date in descending order", async () => {
+    const { body } = await request(app)
+      .get("/api/patients/C-1/handovers")
+      .expect(200);
+    expect(body.handovers).toBeSortedBy("handover_date", { descending: true });
+  });
+  test("200: shows who voided a note, and null for notes that aren't voided", async () => {
+    const { body } = await request(app)
+      .get("/api/patients/C-2/handovers")
+      .expect(200);
+
+    const voidedNote = body.handovers.find((handover) => handover.is_voided);
+    const activeNote = body.handovers.find((handover) => !handover.is_voided);
+
+    expect(voidedNote.voided_by_name).toBe("Sarah Johnson");
+    expect(activeNote.voided_by_name).toBeNull();
+  });
+  test("200: responds with an empty handovers array if patient has no handovers", async () => {
+    const { body } = await request(app)
+      .get("/api/patients/C-3/handovers")
+      .expect(200);
+    expect(body.handovers.length).toBe(0);
+    expect(body.handover_count).toBe(0);
+  });
+  test("404: responds with the correct message if the bed is not occupied", async () => {
+    const { body } = await request(app)
+      .get("/api/patients/C-99/handovers")
+      .expect(404);
+    expect(body.msg).toBe("No patient found in this bed");
+  });
+});
