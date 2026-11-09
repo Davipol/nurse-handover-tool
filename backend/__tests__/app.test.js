@@ -3,6 +3,7 @@ const app = require("../app");
 const db = require("../db/connection");
 const seed = require("../db/seed");
 const testData = require("../db/data/test-data");
+const aiModel = require("../models/ai.model");
 
 // Never call the real AI in tests: replace each function with a fake
 jest.mock("../models/ai.model", () => ({
@@ -424,5 +425,60 @@ describe("GET /api/patients/:bed/handovers", () => {
       .get("/api/patients/C-99/handovers")
       .expect(404);
     expect(body.msg).toBe("No patient found in this bed");
+  });
+});
+
+describe("GET /api/patients/:bed/summary", () => {
+  test("200: returns the cached summary when it is up to date, without calling the AI", async () => {
+    const { body } = await request(app)
+      .get("/api/patients/C-1/summary")
+      .expect(200);
+
+    expect(body.ai_summary).toBe("Cached summary for C-1");
+    expect(body.is_stale).toBe(false);
+    expect(body.handover_count).toBe(2);
+    expect(aiModel.summarizeHandovers).not.toHaveBeenCalled();
+  });
+  test("200: returns the old cached summary marked as stale, without calling the AI", async () => {
+    const { body } = await request(app)
+      .get("/api/patients/R-1/summary")
+      .expect(200);
+
+    expect(body.ai_summary).toBe("Old summary for R-1");
+    expect(body.is_stale).toBe(true);
+    expect(body.handover_count).toBe(1);
+    expect(aiModel.summarizeHandovers).not.toHaveBeenCalled();
+  });
+  test("200: generates a new summary when there is no cache, calls the AI once and saves it", async () => {
+    const { body } = await request(app)
+      .get("/api/patients/C-2/summary")
+      .expect(200);
+
+    expect(body.ai_summary).toBe("Mock patient summary");
+    expect(body.is_stale).toBe(false);
+    expect(body.handover_count).toBe(2);
+    expect(aiModel.summarizeHandovers).toHaveBeenCalledTimes(1);
+
+    // Check the new summary was saved to the patient
+    const { body: patientBody } = await request(app)
+      .get("/api/patients/C-2")
+      .expect(200);
+
+    expect(patientBody.patient.ai_summary).toBe("Mock patient summary");
+    expect(patientBody.patient.ai_summary_count).toBe(2);
+  });
+  test("404: returns the correct message when the patient has no handovers, without calling the AI", async () => {
+    const { body } = await request(app)
+      .get("/api/patients/C-3/summary")
+      .expect(404);
+    expect(body.msg).toBe("No handovers found for this patient");
+    expect(aiModel.summarizeHandovers).not.toHaveBeenCalled();
+  });
+  test("404: returns the correct message when no patient is in the requested bed, without calling the AI", async () => {
+    const { body } = await request(app)
+      .get("/api/patients/C-999/summary")
+      .expect(404);
+    expect(body.msg).toBe("Patient not found");
+    expect(aiModel.summarizeHandovers).not.toHaveBeenCalled();
   });
 });
