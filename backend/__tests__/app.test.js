@@ -14,6 +14,13 @@ jest.mock("../models/ai.model", () => ({
 beforeEach(() => seed(testData));
 afterAll(() => db.end());
 
+describe("Unknown routes", () => {
+  test("404: responds with correct error message with a non-existent url is accessed", async () => {
+    const { body } = await request(app).get("/api/nonexistent").expect(404);
+    expect(body.msg).toBe("Route not found");
+  });
+});
+
 describe("GET /api/units", () => {
   test("200: responds with an array of all units", async () => {
     const { body } = await request(app).get("/api/units").expect(200);

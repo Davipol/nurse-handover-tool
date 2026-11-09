@@ -27,6 +27,10 @@ app.use("/api/patients", patientsRouter);
 const handoverRouter = require("./routes/handovers.routes");
 app.use("/api/handovers", handoverRouter);
 
+app.use((req, res) => {
+  res.status(404).send({ msg: "Route not found" });
+});
+
 app.use((err, _req, res, next) => {
   if (err.code === "22P02") {
     return res.status(400).send({ msg: "Bad request" });
