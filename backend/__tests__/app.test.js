@@ -16,7 +16,7 @@ beforeEach(() => seed(testData));
 afterAll(() => db.end());
 
 describe("Unknown routes", () => {
-  test("404: responds with correct error message with a non-existent url is accessed", async () => {
+  test("404: responds with correct error message when a non-existent url is accessed", async () => {
     const { body } = await request(app).get("/api/nonexistent").expect(404);
     expect(body.msg).toBe("Route not found");
   });
@@ -143,6 +143,18 @@ describe("GET /api/handovers", () => {
       expect(handover.handover_date).toBe("2026-02-02T00:00:00.000Z");
     });
   });
+  test("400: responds with Bad request when the date filter is not a valid date", async () => {
+    const { body } = await request(app)
+      .get("/api/handovers?date=not-a-date")
+      .expect(400);
+    expect(body.msg).toBe("Bad request");
+  });
+  test("400: responds with Bad request when the date filter is an impossible date", async () => {
+    const { body } = await request(app)
+      .get("/api/handovers?date=2026-02-30")
+      .expect(400);
+    expect(body.msg).toBe("Bad request");
+  });
   test("200: returns all handovers with the same shift when shift filter is present", async () => {
     const { body } = await request(app)
       .get("/api/handovers?shift=day")
@@ -167,6 +179,17 @@ describe("GET /api/handovers", () => {
       .get("/api/handovers?urgency=urgent")
       .expect(200);
     expect(body.handovers).toBeSortedBy("handover_date", { descending: true });
+  });
+  test("200: includes voided handovers, with their void details, for traceability", async () => {
+    const { body } = await request(app).get("/api/handovers").expect(200);
+
+    const voidedNote = body.handovers.find((handover) => handover.is_voided);
+    expect(voidedNote).toMatchObject({
+      id: 4,
+      is_voided: true,
+      voided_by: 1,
+      void_reason: "Wrong patient",
+    });
   });
 });
 
@@ -222,19 +245,6 @@ describe("POST /api/handovers", () => {
       .expect(400);
     expect(body.msg).toBe("Bad request");
   });
-  test("400: responds with Bad request when the date filter is not a valid date", async () => {
-    const { body } = await request(app)
-      .get("/api/handovers?date=not-a-date")
-      .expect(400);
-    expect(body.msg).toBe("Bad request");
-  });
-
-  test("400: responds with Bad request when the date filter is an impossible date", async () => {
-    const { body } = await request(app)
-      .get("/api/handovers?date=2026-02-30")
-      .expect(400);
-    expect(body.msg).toBe("Bad request");
-  });
   test("404: returns the correct message if one of the required fields is not found", async () => {
     const { body } = await request(app)
       .post("/api/handovers")
@@ -243,7 +253,7 @@ describe("POST /api/handovers", () => {
     expect(body.msg).toBe("Not found");
   });
 });
-describe("PATCH /api/handovers", () => {
+describe("PATCH /api/handovers/:id/urgency", () => {
   test("200: updates the urgency and returns the note with the new value", async () => {
     const { body } = await request(app)
       .patch("/api/handovers/1/urgency")
