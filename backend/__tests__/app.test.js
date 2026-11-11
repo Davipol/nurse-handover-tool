@@ -482,3 +482,41 @@ describe("GET /api/patients/:bed/summary", () => {
     expect(aiModel.summarizeHandovers).not.toHaveBeenCalled();
   });
 });
+describe("GET /api/handovers/:id/summary", () => {
+  test("200: returns the right handover note, the mock summary and a disclaimer", async () => {
+    const { body } = await request(app)
+      .get("/api/handovers/1/summary")
+      .expect(200);
+
+    expect(body.handover_note.id).toBe(1);
+    expect(body.ai_summary).toBe("Mock single summary");
+    expect(body.disclaimer).toBe(
+      "AI-generated summary - always verify with original note",
+    );
+    expect(aiModel.summarizeSingleHandover).toHaveBeenCalledWith(
+      expect.objectContaining({ id: 1 }),
+    );
+    expect(aiModel.summarizeSingleHandover).toHaveBeenCalledTimes(1);
+  });
+  test("404: responds with the correct message if handover does not exist", async () => {
+    const { body } = await request(app)
+      .get("/api/handovers/999/summary")
+      .expect(404);
+    expect(body.msg).toBe("Handover not found");
+    expect(aiModel.summarizeSingleHandover).not.toHaveBeenCalled();
+  });
+  test("400: responds with the correct message if handover id is not a number", async () => {
+    const { body } = await request(app)
+      .get("/api/handovers/abctest/summary")
+      .expect(400);
+    expect(body.msg).toBe("Bad request");
+    expect(aiModel.summarizeSingleHandover).not.toHaveBeenCalled();
+  });
+  test("500: responds with the correct error message when ai model is down", async () => {
+    aiModel.summarizeSingleHandover.mockRejectedValueOnce(new Error("AI down"));
+    const { body } = await request(app)
+      .get("/api/handovers/1/summary")
+      .expect(500);
+    expect(body.msg).toBe("Internal server error");
+  });
+});
