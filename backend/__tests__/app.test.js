@@ -520,3 +520,48 @@ describe("GET /api/handovers/:id/summary", () => {
     expect(body.msg).toBe("Internal server error");
   });
 });
+
+describe("GET /api/units/:id/summary", () => {
+  test("200: responds with the correct unit, date, count and summary", async () => {
+    const { body } = await request(app)
+      .get("/api/units/1/summary?date=2026-02-01")
+      .expect(200);
+    expect(aiModel.summarizeUnitDay).toHaveBeenCalledTimes(1);
+    expect(body.unit.id).toBe(1);
+    expect(body.unit.name).toBe("Cardiology");
+    expect(body.date).toBe("2026-02-01");
+    expect(body.handover_count).toBe(1);
+    expect(body.ai_summary).toBe("Mock unit summary");
+  });
+  test("400: responds with the correct message when date parameter is not present", async () => {
+    const { body } = await request(app).get("/api/units/1/summary").expect(400);
+    expect(body.msg).toBe("Date parameter is required (format: YYYY-MM-DD)");
+    expect(aiModel.summarizeUnitDay).not.toHaveBeenCalled();
+  });
+  test("404: responds with the correct message when unit id is not found", async () => {
+    const { body } = await request(app)
+      .get("/api/units/999/summary?date=2026-02-01")
+      .expect(404);
+    expect(body.msg).toBe("Unit not found");
+    expect(aiModel.summarizeUnitDay).not.toHaveBeenCalled();
+  });
+  test("404: responds with the correct message when no handover exists on the specified date", async () => {
+    const { body } = await request(app)
+      .get("/api/units/1/summary?date=2026-09-28")
+      .expect(404);
+    expect(body.msg).toBe("No handovers found for this unit on this date");
+    expect(aiModel.summarizeUnitDay).not.toHaveBeenCalled();
+  });
+  test("200: responds with the summary of the existing notes, excluding the voided handover notes", async () => {
+    const { body } = await request(app)
+      .get("/api/units/1/summary?date=2026-02-02")
+      .expect(200);
+    expect(body.handover_count).toBe(2);
+    expect(aiModel.summarizeUnitDay).toHaveBeenCalledTimes(1);
+    const handoversSentToAI = aiModel.summarizeUnitDay.mock.calls[0][1];
+    expect(handoversSentToAI).toHaveLength(2);
+    handoversSentToAI.forEach((handover) => {
+      expect(handover.is_voided).toBe(false);
+    });
+  });
+});

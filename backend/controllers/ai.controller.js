@@ -106,6 +106,7 @@ const getUnitDailySummary = async (req, res, next) => {
       JOIN patients p ON h.patient_id = p.id
       WHERE p.unit_id = $1 
       AND h.handover_date::date = $2
+      AND h.is_voided = false
       ORDER BY h.urgency DESC, h.created_at DESC
     `,
       [id, date],
