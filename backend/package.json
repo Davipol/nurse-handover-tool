@@ -3,17 +3,17 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "setup-dbs": "psql -U postgres -h localhost -f ./db/db_setup.sql",
+    "setup-dev": "psql -c 'DROP DATABASE IF EXISTS handover_tool_db' -c 'CREATE DATABASE handover_tool_db' && psql -d handover_tool_db -f ./db/schema.sql -f ./db/migrations/003_add_ai_summary_cache.sql -f ./db/migrations/004_add_handover_voiding.sql -f ./db/migrations/005_add_password_hash.sql",
     "seed": "node ./db/db_seed.js",
-    "setup-and-seed": "npm run setup-dbs && psql -U postgres -h localhost -d handover_tool_db -f ./db/schema.sql && npm run seed",
+    "setup-and-seed": "npm run setup-dev && npm run seed",
     "setup-test": "psql -c 'DROP DATABASE IF EXISTS handover_tool_db_test' -c 'CREATE DATABASE handover_tool_db_test' && psql -d handover_tool_db_test -f ./db/schema.sql -f ./db/migrations/003_add_ai_summary_cache.sql -f ./db/migrations/004_add_handover_voiding.sql -f ./db/migrations/005_add_password_hash.sql",
     "test": "jest",
-    "start": "node app.js",
+    "start": "node listen.js",
     "dev": "nodemon listen.js"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "description": "",
   "dependencies": {
     "bcrypt": "^6.0.0",

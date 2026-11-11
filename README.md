@@ -2,12 +2,14 @@
 
 A full-stack clinical handover tool for hospital nurses. Nurses can view patient information, read and write shift handover notes, and receive AI-generated SBAR summaries to support safe patient care transitions.
 
+Built as a portfolio project. It runs on demo data only and is not intended for real patient information.
+
 ## Features
 
 - Browse patients by hospital unit
 - View full handover history per patient
 - Write new handover notes with vitals and urgency level
-- Record vitals separately as a quick entry without a full handover note
+- Record vitals separately as a quick entry (saved as a routine handover note)
 - AI-generated SBAR summaries (updated automatically on new handovers)
 - Change handover urgency level
 - Void handovers with reason and audit trail
@@ -60,6 +62,23 @@ PGPORT=5432
 LIQUID_API_KEY=your_openrouter_key
 ```
 
+Backend `.env.test`:
+
+```bash
+PGDATABASE=handover_tool_db_test
+PGUSER=your_user
+PGPASSWORD=your_password
+PGHOST=localhost
+PGPORT=5432
+```
+
+Backend `.env.production` (used when `NODE_ENV=production`, connects with SSL):
+
+```bash
+DATABASE_URL=your_postgres_connection_string
+LIQUID_API_KEY=your_openrouter_key
+```
+
 Frontend `.env.local`:
 ```bash
 NEXT_PUBLIC_API_URL=http://localhost:9090
@@ -71,9 +90,39 @@ NEXTAUTH_URL=http://localhost:3000
 
 ```bash
 cd backend
-psql handover_tool_db -f db/schema.sql
-psql handover_tool_db -f db/migrations/003_add_ai_summary_cache.sql
-psql handover_tool_db -f db/migrations/004_add_handover_voiding.sql
-psql handover_tool_db -f db/migrations/005_add_password_hash.sql
-node db/db_seed.js
+npm run setup-and-seed
 ```
+
+The seed creates 6 units with demo nurses, patients and handover notes. All demo nurses share the password `Handover2026!`.
+
+## Testing
+
+Tests use Jest and Supertest against a separate test database. AI calls are mocked, so no API key is needed.
+
+```bash
+cd backend
+npm run setup-test
+npm test
+```
+
+## API Endpoints
+
+| Method | Endpoint | Description |
+| ------ | -------- | ----------- |
+| GET | `/api/units` | List all units |
+| GET | `/api/units/:id/summary?date=YYYY-MM-DD` | AI summary of a unit's handovers on a given date |
+| GET | `/api/nurses` | List all nurses |
+| POST | `/api/nurses/login` | Log in with email and password |
+| GET | `/api/patients` | List patients (filters: `unit`, `bed`) |
+| GET | `/api/patients/:bed` | Get the patient in a bed |
+| GET | `/api/patients/:bed/handovers` | Handover history for a patient |
+| GET | `/api/patients/:bed/summary` | Cached AI SBAR summary for a patient |
+| GET | `/api/handovers` | List handovers (filters: `urgency`, `date`, `shift`) |
+| POST | `/api/handovers` | Create a handover note |
+| PATCH | `/api/handovers/:id/urgency` | Change a handover's urgency |
+| PATCH | `/api/handovers/:id/void` | Void a handover with a reason |
+| GET | `/api/handovers/:id/summary` | AI SBAR summary of a single handover |
+
+## License
+
+MIT, see [LICENSE](LICENSE).
