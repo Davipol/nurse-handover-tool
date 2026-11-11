@@ -32,7 +32,7 @@ app.use((req, res) => {
 });
 
 app.use((err, _req, res, next) => {
-  if (err.code === "22P02") {
+  if (["22P02", "22007", "22008"].includes(err.code)) {
     return res.status(400).send({ msg: "Bad request" });
   }
   if (err.code === "23503") {

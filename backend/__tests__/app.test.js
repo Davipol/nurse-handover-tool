@@ -222,6 +222,19 @@ describe("POST /api/handovers", () => {
       .expect(400);
     expect(body.msg).toBe("Bad request");
   });
+  test("400: responds with Bad request when the date filter is not a valid date", async () => {
+    const { body } = await request(app)
+      .get("/api/handovers?date=not-a-date")
+      .expect(400);
+    expect(body.msg).toBe("Bad request");
+  });
+
+  test("400: responds with Bad request when the date filter is an impossible date", async () => {
+    const { body } = await request(app)
+      .get("/api/handovers?date=2026-02-30")
+      .expect(400);
+    expect(body.msg).toBe("Bad request");
+  });
   test("404: returns the correct message if one of the required fields is not found", async () => {
     const { body } = await request(app)
       .post("/api/handovers")
