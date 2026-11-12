@@ -1,4 +1,5 @@
 # Handover AI
+![CI](https://github.com/Davipol/nurse-handover-tool/actions/workflows/ci.yml/badge.svg)
 
 A full-stack clinical handover tool for hospital nurses. Nurses can view patient information, read and write shift handover notes, and receive AI-generated SBAR summaries to support safe patient care transitions.
 
@@ -14,6 +15,7 @@ Built as a portfolio project. It runs on demo data only and is not intended for 
 - Change handover urgency level
 - Void handovers with reason and audit trail
 - Nurse authentication with JWT sessions
+- Backend covered by integration tests, run automatically on every push
 
 ## Tech Stack
 
@@ -21,7 +23,8 @@ Built as a portfolio project. It runs on demo data only and is not intended for 
 **Backend:** Node.js, Express  
 **Database:** PostgreSQL (Neon)  
 **AI:** OpenRouter (Liquid LFM model)  
-**Deployment:** Vercel (frontend), Render (backend)
+**Deployment:** Vercel (frontend), Render (backend)  
+**Testing & CI:** Jest, Supertest, GitHub Actions
 
 ## Demo
 
@@ -104,6 +107,8 @@ cd backend
 npm run setup-test
 npm test
 ```
+
+Every push to `main` runs the test suite on GitHub Actions against a fresh Postgres database. Render and Vercel only deploy once the tests pass.
 
 ## API Endpoints
 
