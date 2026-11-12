@@ -1,5 +1,5 @@
 {
-  "name": "database-setup",
+  "name": "handover-ai-backend",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
@@ -12,9 +12,9 @@
     "dev": "nodemon listen.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "Davipol",
   "license": "MIT",
-  "description": "",
+  "description": "Express API for Handover AI, a clinical shift handover tool",
   "dependencies": {
     "bcrypt": "^6.0.0",
     "cors": "^2.8.6",
