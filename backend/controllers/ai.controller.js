@@ -2,7 +2,7 @@ const db = require("../db/connection");
 const aiModel = require("../models/ai.model");
 const handoverModel = require("../models/handovers.model");
 
-const getPatientSummary = async (req, res) => {
+const getPatientSummary = async (req, res, next) => {
   try {
     const { bed } = req.params;
     const handoversData = await handoverModel.fetchHandoversByBed(bed);
@@ -45,8 +45,7 @@ const getPatientSummary = async (req, res) => {
       disclaimer: "AI-generated summary - always verify with original notes",
     });
   } catch (err) {
-    console.error("Error in getPatientSummary:", err);
-    res.status(500).send({ msg: err.message });
+    next(err);
   }
 };
 

@@ -504,7 +504,17 @@ describe("GET /api/patients/:bed/summary", () => {
     expect(body.msg).toBe("Patient not found");
     expect(aiModel.summarizeHandovers).not.toHaveBeenCalled();
   });
+  test("500: responds with a generic error if the AI service fails", async () => {
+    aiModel.summarizeHandovers.mockRejectedValueOnce(new Error("AI down"));
+
+    const { body } = await request(app)
+      .get("/api/patients/C-2/summary")
+      .expect(500);
+
+    expect(body.msg).toBe("Internal server error");
+  });
 });
+
 describe("GET /api/handovers/:id/summary", () => {
   test("200: returns the right handover note, the mock summary and a disclaimer", async () => {
     const { body } = await request(app)
