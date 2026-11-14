@@ -20,6 +20,8 @@ export default function UserMenu() {
   return (
     <div className="relative" ref={ref}>
       <button
+        aria-label="User menu"
+        aria-expanded={open}
         onClick={() => setOpen((prev) => !prev)}
         className="flex items-center justify-center w-9 h-9 rounded-full bg-gray-100 hover:bg-gray-200 transition"
       >
