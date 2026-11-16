@@ -1,12 +1,5 @@
 import { test, expect } from "@playwright/test";
-
-async function login(page) {
-  await page.goto("http://localhost:3000/login");
-  await page.getByLabel("email").fill("sarah.johnson@hospital.com");
-  await page.getByLabel("password").fill("Handover2026!");
-  await page.getByRole("button", { name: "Sign In" }).click();
-  await expect(page).toHaveURL("http://localhost:3000/");
-}
+import { login } from "./helpers";
 
 test.describe("Unit page", () => {
   // Login before each test

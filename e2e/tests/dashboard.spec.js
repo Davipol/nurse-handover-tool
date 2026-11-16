@@ -1,13 +1,10 @@
 import { test, expect } from "@playwright/test";
+import { login } from "./helpers";
 
 test.describe("Dashboard page", () => {
   test.beforeEach(async ({ page }) => {
     // Login before each test
-    await page.goto("http://localhost:3000/login");
-    await page.getByLabel("email").fill("sarah.johnson@hospital.com");
-    await page.getByLabel("password").fill("Handover2026!");
-    await page.getByRole("button", { name: "Sign In" }).click();
-    await expect(page).toHaveURL("http://localhost:3000/");
+    await login(page);
   });
   test("A user can click on a unit and be taken to that unit's page", async ({
     page,
